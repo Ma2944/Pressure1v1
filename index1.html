@@ -1,0 +1,2337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRESSURE 1V1 — Dubai</title>
+
+
+  <!-- Google Fonts: Bebas Neue for headings, Barlow for body text -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+
+    /*
+       GLOBAL VARIABLES & RESET
+       All colors are defined here so you only need to change once
+    */
+    :root {
+      --red: #e8001c;         /* Main red color */
+      --red-glow: #ff0025;    /* Brighter red for hover states */
+      --black: #0a0a0a;       /* Page background */
+      --black2: #111111;      /* Slightly lighter panels */
+      --black3: #1a1a1a;      /* Cards and boxes */
+      --white: #f5f5f5;       /* Main text color */
+      --gray: #888888;        /* Muted/label text */
+      --gold: #ffd700;        /* 1st place gold */
+    }
+
+    /* Reset all default browser margins/padding */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Barlow', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Subtle film grain noise overlay on top of entire page */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.3;
+    }
+
+
+    /* ============================================================
+       NAVIGATION BAR
+       Fixed at top, transparent with blur effect
+    ============================================================ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 64px;
+      background: rgba(10,10,10,0.95);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(232,0,28,0.2);
+    }
+
+    /* Logo in the top-left */
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.08em;
+      color: var(--white);
+      cursor: pointer;
+    }
+    .nav-logo span { color: var(--red); } /* "1V1" part in red */
+
+    /* Navigation link list */
+    .nav-links { display: flex; list-style: none; }
+    .nav-links li a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gray);
+      text-decoration: none;
+      padding: 0 1.25rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    /* Active/hover state for nav links */
+    .nav-links li a:hover,
+    .nav-links li a.active {
+      color: var(--white);
+      border-bottom-color: var(--red);
+    }
+
+
+    /* ============================================================
+       PAGE SYSTEM
+       Only the active page is shown. Fade-in animation on switch.
+    ============================================================ */
+    .page { display: none; padding-top: 64px; animation: fadeIn 0.35s ease; }
+    .page.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Shared page header style used across Ranking, Leaderboard, About */
+    .page-header {
+      padding: 3.5rem 3.5rem 2rem;
+      background: var(--black2);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+
+    /* ============================================================
+       REUSABLE COMPONENTS
+       Eyebrow labels, section titles, buttons, tags
+    ============================================================ */
+
+    /* Small red uppercase label above section titles */
+    .eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.35em;
+      color: var(--red);
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    /* Large section heading */
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      line-height: 1;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Filled red button */
+    .btn-red {
+      background: var(--red);
+      color: var(--white);
+      border: none;
+      padding: 0.9rem 2.2rem;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-red:hover { background: var(--red-glow); transform: translateY(-2px); }
+
+    /* Outlined ghost button */
+    .btn-ghost {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 0.9rem 2.2rem;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .btn-ghost:hover { border-color: var(--white); transform: translateY(-2px); }
+
+    /* Small bordered tag pill */
+    .tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.85rem;
+      border: 1px solid rgba(232,0,28,0.35);
+      color: var(--gray);
+    }
+    .tag-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1rem; }
+
+
+    /* ============================================================
+       HOME PAGE — HERO SECTION
+       Full-viewport background image with text overlay
+    ============================================================ */
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 5rem 4rem 4rem;
+      overflow: hidden;
+    }
+
+    /* Background image for hero — FILE: img_hero.webp */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: url('img_hero.webp') right 60% / 60% no-repeat;
+      filter: brightness(1) saturate(0.8);
+    }
+    /* Dark gradient fade so left side text is readable */
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(100deg, rgba(10,10,10,0.97) 35%, rgba(10,10,10,0.45) 70%, transparent 100%);
+    }
+
+    .hero-content { position: relative; z-index: 1; max-width: 640px; }
+
+    /* Hero title — "PRESSURE" filled white, "1V1" outlined in red */
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5rem, 13vw, 10rem);
+      line-height: 0.88;
+      letter-spacing: 0.02em;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.4s forwards;
+    }
+    .hero-title .outline { -webkit-text-stroke: 2px var(--red); color: transparent; }
+    .hero-title .fill   { color: var(--white); }
+
+    .hero-eyebrow { opacity: 0; animation: fadeUp 0.7s 0.2s forwards; }
+    .hero-desc {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.6);
+      margin-top: 1.5rem;
+      line-height: 1.8;
+      max-width: 480px;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.6s forwards;
+    }
+    .hero-btns {
+      display: flex; gap: 1rem; margin-top: 2.5rem; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp 0.7s 0.8s forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+
+    /* ============================================================
+       HOME PAGE — STATS STRIP
+       4-column grid of key numbers beneath the hero
+    ============================================================ */
+    .stats-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      background: var(--black3);
+      border-top: 1px solid rgba(232,0,28,0.25);
+      border-bottom: 1px solid rgba(232,0,28,0.25);
+    }
+    .stat-item {
+      padding: 2rem 1.5rem;
+      text-align: center;
+      border-right: 1px solid rgba(255,255,255,0.05);
+      transition: background 0.3s;
+    }
+    .stat-item:hover { background: rgba(232,0,28,0.05); }
+    .stat-item:last-child { border-right: none; }
+    .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; line-height: 1; color: var(--red); }
+    .stat-lbl { font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; letter-spacing: 0.2em; color: var(--gray); text-transform: uppercase; margin-top: 0.4rem; }
+
+
+    /* ============================================================
+       HOME PAGE — WHO WE ARE SECTION
+       Left text, right image side by side
+    ============================================================ */
+    .who-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 600px;
+    }
+    .who-text {
+      padding: 5rem 3.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: var(--black2);
+    }
+    .who-text p { font-size: 0.95rem; color: rgba(255,255,255,0.6); line-height: 1.85; margin-bottom: 1rem; }
+    .who-text strong { color: var(--white); }
+
+    /* Right side image — FILE: img_action.jpg */
+    .who-img-wrap {
+      position: relative;
+      overflow: hidden;
+      min-height: 500px;
+    }
+    .who-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.9);
+      transition: transform 0.6s ease;
+    }
+    .who-img-wrap:hover img { transform: scale(1.04); }
+    /* Gradient fade on left edge so it blends into the text panel */
+    .who-img-wrap::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(270deg, transparent 60%, var(--black2) 100%);
+      pointer-events: none;
+    }
+
+
+    /* ============================================================
+       HOME PAGE — MEDIA TEAM SECTION
+       3 photos in a grid on the left, text/roles on the right
+    ============================================================ */
+    .media-section { padding: 5rem 3.5rem; background: var(--black); }
+    .media-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-top: 3rem;
+      align-items: start;
+    }
+
+    /* Photo grid: 2 columns, left image spans both rows */
+    .media-imgs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 0.75rem;
+    }
+    .media-img-box {
+      position: relative;
+      overflow: hidden;
+      background: var(--black3);
+    }
+    .media-img-box.tall { grid-row: span 2; } /* Left tall image */
+
+    .media-img-box img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.92) contrast(1.05) saturate(1.1);
+      transition: transform 0.5s ease, filter 0.3s;
+      min-height: 200px;
+    }
+    .media-img-box:hover img {
+      transform: scale(1.05);
+      filter: brightness(1) contrast(1.05) saturate(1.15);
+    }
+    /* Label overlay at bottom of each photo */
+    .media-img-box .img-label {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 1rem 1rem 0.75rem;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* Right side: media team role list */
+    .media-info { display: flex; flex-direction: column; gap: 1rem; }
+    .media-info h3 { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; line-height: 1; margin-bottom: 0.5rem; }
+    .media-info p  { font-size: 0.92rem; color: rgba(255,255,255,0.6); line-height: 1.8; }
+
+    .media-roles { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem; }
+    .media-role {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.7rem 1rem;
+      background: var(--black3);
+      border-left: 2px solid var(--red);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.92rem;
+      transition: background 0.2s;
+    }
+    .media-role:hover { background: rgba(232,0,28,0.08); }
+    .media-role .role-name { color: rgba(255,255,255,0.5); margin-right: 0.3rem; }
+    .media-role .role-desc { color: var(--white); font-weight: 700; }
+
+
+    /* ============================================================
+       RANKING PAGE — RULES CARDS
+       Reusable card grid used for match points, tournament, etc.
+    ============================================================ */
+    .ranking-body { padding: 3rem 3.5rem; max-width: 1100px; margin: 0 auto; }
+
+    /* Starting rating banner */
+    .start-banner {
+      background: var(--black3);
+      border: 1px solid rgba(232,0,28,0.2);
+      border-left: 4px solid var(--red);
+      padding: 2rem 2.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 2rem; flex-wrap: wrap; margin-bottom: 3rem;
+    }
+    .start-val { font-family: 'Bebas Neue', sans-serif; font-size: 4.5rem; line-height: 1; text-shadow: 0 0 40px rgba(232,0,28,0.3); }
+    .start-lbl { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 0.3em; color: var(--gray); text-transform: uppercase; margin-bottom: 0.2rem; }
+    .start-desc { font-size: 0.9rem; color: var(--gray); line-height: 1.7; max-width: 400px; }
+    .start-desc strong { color: var(--white); }
+
+    /* Grid of rule cards */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 3rem;
+    }
+    .card {
+      background: var(--black3);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 1.75rem;
+      position: relative; overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .card:hover { border-color: rgba(232,0,28,0.4); transform: translateY(-3px); }
+    /* Animated red top border on hover */
+    .card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: var(--red); transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
+    }
+    .card:hover::before { transform: scaleX(1); }
+    .card-icon { font-size: 1.6rem; margin-bottom: 0.6rem; display: block; }
+    .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; margin-bottom: 0.6rem; }
+
+    /* Rows inside each card (label + value) */
+    .card-rows { display: flex; flex-direction: column; gap: 0.45rem; }
+    .card-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.45rem 0.7rem;
+      background: rgba(255,255,255,0.03);
+      border-left: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .card-row:hover { background: rgba(232,0,28,0.06); border-left-color: var(--red); }
+    .cr-lbl { font-family: 'Barlow Condensed', sans-serif; font-size: 0.88rem; color: var(--gray); }
+    .cr-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.25rem; }
+
+    /* Value color classes */
+    .val-pos    { color: #4cff91; }  /* Green for positive points */
+    .val-neg    { color: var(--red); } /* Red for negative points */
+    .val-gold   { color: var(--gold); }
+    .val-silver { color: #c0c0c0; }
+    .val-bronze { color: #cd7f32; }
+
+    /* Upset bonus cards (2 col) */
+    .logic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 3rem; }
+    .logic-card {
+      padding: 2rem; background: var(--black3);
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: transform 0.3s;
+    }
+    .logic-card:hover { transform: translateY(-3px); }
+    .logic-card.up   { border-bottom: 3px solid #4cff91; }
+    .logic-card.down { border-bottom: 3px solid var(--red); }
+    .logic-icon  { font-size: 2.2rem; margin-bottom: 0.75rem; }
+    .logic-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; line-height: 1; margin-bottom: 0.5rem; }
+    .logic-card.up   .logic-title { color: #4cff91; }
+    .logic-card.down .logic-title { color: var(--red); }
+    .logic-desc  { font-size: 0.88rem; color: var(--gray); line-height: 1.65; }
+
+
+    /* ============================================================
+       RANKING PAGE — RATING CALCULATOR
+       Interactive tool to compute new rating after a match
+    ============================================================ */
+    .calc-wrapper {
+      background: var(--black3);
+      border: 1px solid rgba(232,0,28,0.2);
+      padding: 2.5rem;
+      position: relative; overflow: hidden;
+      margin-bottom: 3rem;
+    }
+    /* Decorative background text */
+    .calc-wrapper::after {
+      content: 'CALC';
+      position: absolute; right: -10px; bottom: -20px;
+      font-family: 'Bebas Neue', sans-serif; font-size: 7rem;
+      color: rgba(232,0,28,0.04); line-height: 1; pointer-events: none;
+    }
+
+    /* 2-column input grid */
+    .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    .calc-field { display: flex; flex-direction: column; gap: 0.45rem; }
+    .calc-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; letter-spacing: 0.25em; color: var(--gray); text-transform: uppercase; }
+
+    /* Number/text input styling */
+    .calc-input {
+      background: var(--black2);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 2px solid rgba(232,0,28,0.4);
+      color: var(--white);
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem;
+      padding: 0.55rem 0.7rem; outline: none; width: 100%;
+      transition: border-color 0.3s;
+    }
+    .calc-input:focus { border-bottom-color: var(--red); }
+    .calc-input::placeholder { color: rgba(255,255,255,0.12); }
+
+    /* Dropdown select styling */
+    .calc-select {
+      background: var(--black2);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 2px solid rgba(232,0,28,0.4);
+      color: var(--white);
+      font-family: 'Barlow Condensed', sans-serif; font-size: 1rem;
+      letter-spacing: 0.05em; padding: 0.55rem 0.7rem;
+      outline: none; cursor: pointer; width: 100%;
+      transition: border-color 0.3s;
+    }
+    .calc-select:focus { border-bottom-color: var(--red); }
+    .calc-select option { background: #1a1a1a; }
+
+    /* Calculate button */
+    .calc-btn {
+      background: var(--red); color: var(--white); border: none;
+      padding: 1rem 2rem; font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem; letter-spacing: 0.15em; cursor: pointer;
+      margin-top: 1.25rem; width: 100%;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .calc-btn:hover  { background: var(--red-glow); }
+    .calc-btn:active { transform: scale(0.99); }
+
+    /* Result box (hidden until calculate is clicked) */
+    .calc-result {
+      margin-top: 1.5rem; padding: 1.75rem;
+      background: var(--black2); border: 1px solid rgba(232,0,28,0.15);
+      display: none;
+    }
+    .calc-result.show { display: block; }
+    .cr-label2  { font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; letter-spacing: 0.3em; color: var(--gray); text-transform: uppercase; margin-bottom: 0.4rem; }
+    .cr-new     { font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; line-height: 1; }
+    .cr-change  { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; margin-top: 0.2rem; }
+    .cr-breakdown { margin-top: 0.75rem; font-family: 'Barlow Condensed', sans-serif; font-size: 0.92rem; color: var(--gray); line-height: 1.8; }
+
+
+    /* ============================================================
+       LEADERBOARD PAGE
+       Live rankings table with add/update/delete player tools
+    ============================================================ */
+    .lb-body { padding: 3rem 3.5rem; max-width: 960px; margin: 0 auto; }
+
+    /* Pulsing "LIVE" badge */
+    .live-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(232,0,28,0.12);
+      border: 1px solid rgba(232,0,28,0.3);
+      padding: 0.3rem 0.85rem; margin-bottom: 1.5rem;
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--red);
+    }
+    .live-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--red); animation: livePulse 1.5s infinite;
+    }
+    @keyframes livePulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    /* Main leaderboard table */
+    .lb-table { background: var(--black3); border: 1px solid rgba(255,255,255,0.06); overflow: hidden; margin-bottom: 2rem; }
+
+    /* Table header row — columns: Rank | Player | Rating | Trend | Wins */
+    .lb-thead {
+      display: grid;
+      grid-template-columns: 56px 1fr 110px 90px 70px;
+      padding: 0.85rem 1.25rem;
+      background: rgba(232,0,28,0.07);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .lb-thead span { font-family: 'Barlow Condensed', sans-serif; font-size: 0.68rem; letter-spacing: 0.25em; color: var(--gray); text-transform: uppercase; }
+
+    /* Each player row */
+    .lb-row-item {
+      display: grid;
+      grid-template-columns: 56px 1fr 110px 90px 70px;
+      padding: 0.9rem 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.035);
+      align-items: center;
+      transition: background 0.2s;
+    }
+    .lb-row-item:hover    { background: rgba(255,255,255,0.025); }
+    .lb-row-item:last-child { border-bottom: none; }
+
+    /* Rank number — gold/silver/bronze for top 3 */
+    .lb-rank-num         { font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; color: var(--gray); }
+    .lb-rank-num.r1      { color: var(--gold); }
+    .lb-rank-num.r2      { color: #c0c0c0; }
+    .lb-rank-num.r3      { color: #cd7f32; }
+
+    /* Player cell: avatar circle + name */
+    .lb-player-cell { display: flex; align-items: center; gap: 0.75rem; }
+    .lb-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(232,0,28,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Bebas Neue', sans-serif; font-size: 0.85rem; color: var(--red);
+      border: 1px solid rgba(232,0,28,0.25); flex-shrink: 0;
+    }
+    .lb-pname      { font-family: 'Barlow Condensed', sans-serif; font-size: 1.05rem; font-weight: 700; letter-spacing: 0.04em; }
+    .lb-rating-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; text-align: right; }
+    .lb-trend-val  { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; text-align: right; }
+    .lb-wins-val   { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700; text-align: right; color: var(--gray); }
+
+    /* ADD PLAYER panel */
+    .add-panel {
+      background: var(--black3);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 2rem; margin-bottom: 2rem;
+    }
+    .panel-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; margin-bottom: 1.25rem; color: var(--white); }
+
+    /* Input grid inside the panels */
+    .add-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 1rem; align-items: flex-end;
+    }
+    .add-grid .calc-input { font-size: 1.3rem; padding: 0.5rem 0.65rem; }
+
+    /* Green add button */
+    .add-btn {
+      background: var(--red); color: var(--white); border: none;
+      padding: 0.65rem 1.5rem;
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem;
+      letter-spacing: 0.1em; cursor: pointer; white-space: nowrap;
+      transition: background 0.2s; height: fit-content;
+    }
+    .add-btn:hover { background: var(--red-glow); }
+
+    /* UPDATE RATING panel */
+    .update-panel { background: var(--black3); border: 1px solid rgba(255,255,255,0.06); padding: 2rem; }
+    .update-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 1rem; align-items: flex-end;
+    }
+    .update-grid .calc-input  { font-size: 1.3rem; padding: 0.5rem 0.65rem; }
+    .update-grid .calc-select { padding: 0.5rem 0.65rem; }
+
+    /* Danger/utility action buttons below the update panel */
+    .danger-btns { margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+    .danger-btn {
+      background: transparent; color: rgba(255,255,255,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 0.5rem 1rem;
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem;
+      letter-spacing: 0.1em; cursor: pointer; transition: all 0.2s;
+    }
+    .danger-btn:hover { color: var(--red); border-color: var(--red); }
+    .muted-btn {
+      background: transparent; color: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 0.5rem 1rem;
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem;
+      letter-spacing: 0.1em; cursor: pointer; transition: all 0.2s;
+    }
+    .muted-btn:hover { color: var(--gray); }
+
+
+    /* ============================================================
+       ABOUT PAGE
+       Hero image, stats, quote, contact section
+    ============================================================ */
+    .about-body { max-width: 1100px; margin: 0 auto; padding: 3.5rem; }
+
+    /* Large full-width image at top of about page — FILE: img_fans.jpg */
+    .about-hero-img {
+      width: 100%; display: block;
+      filter: brightness(0.88) contrast(1.05) saturate(1.05);
+      margin-bottom: 3rem;
+      max-height: 460px; object-fit: cover; object-position: center 30%;
+    }
+
+    /* Text block with left red border */
+    .about-text-block {
+      padding: 2.5rem; background: var(--black3);
+      border-left: 4px solid var(--red); margin-bottom: 2rem;
+    }
+    .about-text-block h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.9rem; margin-bottom: 0.75rem; }
+    .about-text-block p  { font-size: 0.92rem; color: rgba(255,255,255,0.62); line-height: 1.85; }
+
+    /* Audience stat cards */
+    .audience-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-top: 2rem; }
+    .audience-card { padding: 1.5rem; background: var(--black3); border: 1px solid rgba(255,255,255,0.06); text-align: center; transition: border-color 0.3s; }
+    .audience-card:hover { border-color: rgba(232,0,28,0.35); }
+    .aud-icon { font-size: 1.8rem; display: block; margin-bottom: 0.6rem; }
+    .aud-lbl  { font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; letter-spacing: 0.2em; color: var(--gray); text-transform: uppercase; margin-bottom: 0.3rem; }
+    .aud-val  { font-family: 'Barlow Condensed', sans-serif; font-size: 0.95rem; font-weight: 700; }
+
+    /* Sponsor quote block in red */
+    .quote-block { background: var(--red); padding: 2.5rem; margin: 2.5rem 0; position: relative; }
+    .quote-block::before {
+      content: '"'; font-family: 'Bebas Neue', sans-serif; font-size: 7rem;
+      position: absolute; top: -0.5rem; left: 1.5rem; opacity: 0.18; line-height: 1;
+    }
+    .q-text { font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem; line-height: 1.6; font-weight: 600; position: relative; z-index: 1; }
+    .q-attr { font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.9rem; opacity: 0.72; }
+
+    /* Contact cards grid */
+    .contact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; }
+    .contact-card { padding: 1.75rem; background: var(--black3); border: 1px solid rgba(255,255,255,0.06); text-align: center; transition: border-color 0.3s; }
+    .contact-card:hover { border-color: rgba(232,0,28,0.3); }
+    .c-icon { font-size: 1.8rem; margin-bottom: 0.75rem; display: block; }
+    .c-type { font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; letter-spacing: 0.2em; color: var(--gray); text-transform: uppercase; margin-bottom: 0.35rem; }
+    .c-val  { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700; }
+
+
+    /* ============================================================
+       FOOTER
+       Shown at the bottom of each page
+    ============================================================ */
+    footer {
+      text-align: center;
+      padding: 2.5rem 2rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.12);
+      text-transform: uppercase;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      margin-top: 2rem;
+    }
+    footer span { color: var(--red); }
+
+
+    /* ============================================================
+       RESPONSIVE — MOBILE BREAKPOINTS
+       Below 768px: stack columns, reduce padding
+    ============================================================ */
+    /* ============================================================
+       FIXTURES PAGE
+    ============================================================ */
+    .fixtures-body { padding: 3rem 3.5rem; max-width: 960px; margin: 0 auto; }
+
+    .fx-top-bar {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;
+    }
+
+    .fx-add-panel {
+      background: var(--black3);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 2rem; margin-bottom: 2rem;
+    }
+    .fx-add-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 120px 120px 160px auto;
+      gap: 1rem; align-items: flex-end;
+    }
+        .fx-add-grid .calc-input { font-size: 1.3rem; padding: 0.5rem 0.65rem; }
+
+    /* player count */
+    .fx-player-count { font-family:'Bebas Neue',sans-serif; font-size:1.1rem; color:var(--gray); }
+    .fx-player-count span { color:var(--red); }
+
+    /* player list table */
+    .fx-player-table { background:var(--black3); border:1px solid rgba(255,255,255,0.06); margin-bottom:2rem; overflow:hidden; }
+    .fx-pt-head {
+      display:grid; grid-template-columns:40px 1fr 1fr auto;
+      padding:0.75rem 1.25rem;
+      background:rgba(232,0,28,0.07);
+      border-bottom:1px solid rgba(255,255,255,0.06);
+    }
+    .fx-pt-head span { font-family:'Barlow Condensed',sans-serif; font-size:0.68rem; letter-spacing:0.25em; color:var(--gray); text-transform:uppercase; }
+    .fx-pt-row {
+      display:grid; grid-template-columns:40px 1fr 1fr auto;
+      padding:0.75rem 1.25rem; border-bottom:1px solid rgba(255,255,255,0.035);
+      align-items:center; transition:background 0.2s;
+    }
+    .fx-pt-row:last-child { border-bottom:none; }
+    .fx-pt-row:hover { background:rgba(255,255,255,0.02); }
+    .fx-pt-num { font-family:'Bebas Neue',sans-serif; font-size:1.1rem; color:var(--gray); }
+    .fx-pt-name { font-family:'Bebas Neue',sans-serif; font-size:1.2rem; }
+    .fx-pt-insta { font-family:'Barlow Condensed',sans-serif; font-size:0.85rem; color:var(--gray); }
+    .fx-pt-del { background:transparent; border:none; color:rgba(255,255,255,0.15); cursor:pointer; font-size:0.85rem; transition:color 0.2s; }
+    .fx-pt-del:hover { color:var(--red); }
+
+    /* action buttons row */
+    .fx-actions { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:2.5rem; }
+    .fx-btn-randomize {
+      background:var(--red); color:var(--white); border:none;
+      padding:0.9rem 2rem; font-family:'Bebas Neue',sans-serif;
+      font-size:1.1rem; letter-spacing:0.15em; cursor:pointer;
+      transition:background 0.2s, transform 0.15s;
+    }
+    .fx-btn-randomize:hover { background:var(--red-glow); transform:translateY(-2px); }
+    .fx-btn-clear {
+      background:transparent; color:rgba(255,255,255,0.3);
+      border:1px solid rgba(255,255,255,0.1);
+      padding:0.9rem 2rem; font-family:'Bebas Neue',sans-serif;
+      font-size:1.1rem; letter-spacing:0.15em; cursor:pointer;
+      transition:all 0.2s;
+    }
+    .fx-btn-clear:hover { color:var(--red); border-color:var(--red); }
+
+    /* bracket round tabs */
+    .fx-tabs { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:2rem; }
+    .fx-tab {
+      font-family:'Barlow Condensed',sans-serif; font-size:0.78rem; font-weight:700;
+      letter-spacing:0.18em; text-transform:uppercase; padding:0.45rem 1.1rem;
+      border:1px solid rgba(255,255,255,0.1); background:transparent; color:var(--gray);
+      cursor:pointer; transition:all 0.2s;
+    }
+    .fx-tab:hover { border-color:rgba(232,0,28,0.4); color:var(--white); }
+    .fx-tab.active { background:var(--red); border-color:var(--red); color:var(--white); }
+
+    /* round label */
+    .fx-round-label {
+      font-family:'Bebas Neue',sans-serif; font-size:1.1rem; letter-spacing:0.25em;
+      color:var(--gray); text-transform:uppercase; padding:0.5rem 0;
+      border-bottom:1px solid rgba(255,255,255,0.05); margin-bottom:0.75rem; margin-top:1.5rem;
+    }
+
+    /* match card */
+    .fx-match {
+      display:grid; grid-template-columns:1fr auto 1fr auto;
+      align-items:center; background:var(--black3);
+      border:1px solid rgba(255,255,255,0.06);
+      padding:1.25rem 1.5rem; margin-bottom:0.6rem;
+      transition:border-color 0.2s, transform 0.2s; position:relative;
+    }
+    .fx-match:hover { border-color:rgba(232,0,28,0.3); transform:translateX(3px); }
+    .fx-match::before {
+      content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+      background:var(--red); transform:scaleY(0); transform-origin:top; transition:transform 0.3s;
+    }
+    .fx-match:hover::before { transform:scaleY(1); }
+    .fx-match.bye { border-left:3px solid var(--gold); opacity:0.7; }
+
+    .fx-player { font-family:'Bebas Neue',sans-serif; font-size:1.35rem; letter-spacing:0.05em; }
+    .fx-player-sub { font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; color:var(--gray); margin-top:0.1rem; }
+    .fx-player.right { text-align:right; }
+    .fx-player.right .fx-player-sub { text-align:right; }
+
+    .fx-vs { font-family:'Bebas Neue',sans-serif; font-size:1.1rem; color:var(--red); padding:0 1.5rem; letter-spacing:0.1em; }
+
+    .fx-badge {
+      font-family:'Barlow Condensed',sans-serif; font-size:0.68rem;
+      letter-spacing:0.15em; text-transform:uppercase;
+      padding:0.2rem 0.6rem; margin-left:1rem;
+      border:1px solid rgba(232,0,28,0.3); color:var(--red);
+    }
+    .fx-badge.bye-badge { border-color:rgba(255,215,0,0.4); color:var(--gold); }
+
+    .fx-empty {
+      text-align:center; padding:4rem 2rem;
+      font-family:'Barlow Condensed',sans-serif; font-size:1rem; color:var(--gray); letter-spacing:0.1em;
+    }
+
+    /* Live tournament — clickable match highlights */
+    .fx-match-live:hover {
+      border-color: rgba(232,0,28,0.6) !important;
+      background: rgba(232,0,28,0.04);
+    }
+    .fx-match-live > div:first-child:hover .fx-player,
+    .fx-match-live > div:nth-child(3):hover .fx-player {
+      color: var(--red) !important;
+      text-shadow: 0 0 12px rgba(232,0,28,0.4);
+    }
+
+    @media (max-width: 768px) {
+      .fixtures-body { padding:2rem 1.25rem; }
+      .fx-add-grid { grid-template-columns:1fr 1fr; }
+      .fx-match { grid-template-columns:1fr auto 1fr; }
+      .fx-badge { display:none; }
+      .fx-meta { display: none; }
+    }
+
+    /* ============================================================
+       FIXTURES ADMIN LOCK OVERLAY
+    ============================================================ */
+    #fxLockOverlay {
+      position:fixed; inset:0; z-index:5000;
+      background:rgba(10,10,10,0.97);
+      display:flex; align-items:center; justify-content:center;
+      backdrop-filter:blur(8px);
+    }
+    .fx-lock-box {
+      background:var(--black3);
+      border:1px solid rgba(232,0,28,0.3);
+      border-top:3px solid var(--red);
+      padding:3rem 2.5rem;
+      max-width:380px; width:90%;
+      text-align:center;
+    }
+    .fx-lock-icon { font-size:2.5rem; margin-bottom:1rem; }
+    .fx-lock-title {
+      font-family:'Bebas Neue',sans-serif; font-size:2rem;
+      letter-spacing:0.15em; margin-bottom:0.4rem;
+    }
+    .fx-lock-sub {
+      font-family:'Barlow Condensed',sans-serif; font-size:0.85rem;
+      color:var(--gray); letter-spacing:0.1em; margin-bottom:2rem;
+    }
+    .fx-lock-input {
+      background:var(--black2); border:none;
+      border-bottom:2px solid rgba(232,0,28,0.5);
+      color:var(--white); font-family:'Bebas Neue',sans-serif;
+      font-size:2rem; letter-spacing:0.4em; text-align:center;
+      width:100%; padding:0.75rem 1rem; outline:none;
+      margin-bottom:1.25rem;
+    }
+    .fx-lock-input:focus { border-bottom-color:var(--red); }
+    .fx-lock-error {
+      font-family:'Barlow Condensed',sans-serif; font-size:0.82rem;
+      color:var(--red); letter-spacing:0.12em; margin-bottom:1rem;
+      min-height:1.2em;
+    }
+    .fx-lock-btn {
+      background:var(--red); color:var(--white); border:none;
+      width:100%; padding:1rem; font-family:'Bebas Neue',sans-serif;
+      font-size:1.3rem; letter-spacing:0.2em; cursor:pointer;
+      transition:background 0.2s;
+    }
+    .fx-lock-btn:hover { background:var(--red-glow); }
+    .fx-lock-view {
+      margin-top:1rem; background:transparent; color:rgba(255,255,255,0.25);
+      border:1px solid rgba(255,255,255,0.08);
+      width:100%; padding:0.7rem; font-family:'Barlow Condensed',sans-serif;
+      font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase;
+      cursor:pointer; transition:all 0.2s;
+    }
+    .fx-lock-view:hover { color:var(--gray); border-color:rgba(255,255,255,0.2); }
+
+    /* Admin badge shown when unlocked */
+    .fx-admin-bar {
+      display:flex; align-items:center; justify-content:space-between;
+      background:rgba(232,0,28,0.08); border:1px solid rgba(232,0,28,0.2);
+      padding:0.6rem 1.25rem; margin-bottom:1.5rem; flex-wrap:wrap; gap:0.5rem;
+    }
+    .fx-admin-label {
+      font-family:'Barlow Condensed',sans-serif; font-size:0.78rem;
+      letter-spacing:0.2em; text-transform:uppercase; color:var(--red);
+    }
+    .fx-lock-out-btn {
+      background:transparent; color:rgba(255,255,255,0.25);
+      border:1px solid rgba(255,255,255,0.1);
+      padding:0.3rem 0.85rem; font-family:'Barlow Condensed',sans-serif;
+      font-size:0.72rem; letter-spacing:0.15em; text-transform:uppercase;
+      cursor:pointer; transition:all 0.2s;
+    }
+    .fx-lock-out-btn:hover { color:var(--red); border-color:rgba(232,0,28,0.4); }
+
+    /* Read-only viewer notice */
+    .fx-viewer-bar {
+      display:flex; align-items:center; justify-content:space-between;
+      background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);
+      padding:0.6rem 1.25rem; margin-bottom:1.5rem; flex-wrap:wrap; gap:0.5rem;
+    }
+    .fx-viewer-label {
+      font-family:'Barlow Condensed',sans-serif; font-size:0.78rem;
+      letter-spacing:0.2em; text-transform:uppercase; color:var(--gray);
+    }
+    .fx-viewer-lock-btn {
+      background:transparent; color:rgba(255,255,255,0.25);
+      border:1px solid rgba(255,255,255,0.1);
+      padding:0.3rem 0.85rem; font-family:'Barlow Condensed',sans-serif;
+      font-size:0.72rem; letter-spacing:0.15em; text-transform:uppercase;
+      cursor:pointer; transition:all 0.2s;
+    }
+    .fx-viewer-lock-btn:hover { color:var(--white); border-color:rgba(255,255,255,0.3); }
+
+    @media (max-width: 768px) {
+
+      /* ---- NAV ---- */
+      nav { padding: 0 1rem; }
+      .nav-logo { font-size: 1.2rem; }
+      .nav-links li a { padding: 0 0.5rem; font-size: 0.65rem; letter-spacing: 0.08em; }
+
+      /* ---- HERO ---- */
+      .hero { padding: 5rem 1.5rem 3rem; min-height: 100svh; }
+      .hero-bg { background-size: cover; background-position: center 30%; }
+      .hero-bg::after { background: linear-gradient(180deg, rgba(10,10,10,0.7) 0%, rgba(10,10,10,0.85) 60%, rgba(10,10,10,0.98) 100%); }
+      .hero-content { max-width: 100%; }
+      .hero-desc { font-size: 0.9rem; }
+      .hero-btns { flex-direction: column; gap: 0.75rem; }
+      .hero-btns .btn-red, .hero-btns .btn-ghost { width: 100%; text-align: center; }
+
+      /* ---- STATS STRIP ---- */
+      .stats-strip { grid-template-columns: repeat(2, 1fr); }
+      .stat-num { font-size: 2.2rem; }
+
+      /* ---- WHO WE ARE ---- */
+      .who-section { grid-template-columns: 1fr; }
+      .who-text { padding: 3rem 1.5rem; }
+      .who-img-wrap { min-height: 260px; }
+      .who-img-wrap::before { background: linear-gradient(180deg, transparent 60%, var(--black2) 100%); }
+
+      /* ---- MEDIA SECTION ---- */
+      .media-section { padding: 3rem 1.5rem; }
+      .media-layout { grid-template-columns: 1fr; gap: 2rem; }
+      .media-imgs { grid-template-columns: 1fr 1fr; }
+      .media-img-box.tall { grid-row: span 1; }
+      .media-img-box img { min-height: 150px; }
+      .media-info h3 { font-size: 1.8rem; }
+
+      /* ---- PAGE HEADERS ---- */
+      .page-header { padding: 2rem 1.5rem 1.5rem; }
+
+      /* ---- RANKING PAGE ---- */
+      .ranking-body { padding: 1.5rem 1.25rem; }
+      .cards-grid { grid-template-columns: 1fr; }
+      .logic-grid { grid-template-columns: 1fr; }
+      .calc-grid { grid-template-columns: 1fr 1fr; }
+      .calc-wrapper { padding: 0; }
+      .start-banner { flex-direction: column; gap: 1rem; padding: 1.5rem; }
+
+      /* ---- LEADERBOARD PAGE ---- */
+      .lb-body { padding: 1.5rem 1.25rem; }
+      .lb-thead, .lb-row-item { grid-template-columns: 44px 1fr 80px 60px; }
+      .lb-thead span:last-child, .lb-row-item > *:nth-child(5) { display: none; }
+      .lb-rating-val { font-size: 1.2rem; }
+      .add-grid { grid-template-columns: 1fr 1fr; }
+      .update-grid { grid-template-columns: 1fr 1fr; }
+
+      /* ---- ABOUT PAGE ---- */
+      .about-body { padding: 1.5rem 1.25rem; }
+      .about-hero-pair { flex-direction: row !important; height: 200px !important; }
+      .about-hero-pair img { width: 50% !important; height: 100% !important; }
+      .audience-grid { grid-template-columns: repeat(2, 1fr); }
+      .contact-grid { grid-template-columns: 1fr; }
+
+      /* ---- FIXTURES PAGE ---- */
+      .fixtures-body { padding: 1.5rem 1.25rem; }
+      .fx-add-grid { grid-template-columns: 1fr 1fr; }
+      .fx-match { grid-template-columns: 1fr auto 1fr; padding: 1rem; }
+      .fx-badge { display: none; }
+      .fx-player { font-size: 1.1rem; }
+      .fx-vs { padding: 0 0.75rem; }
+      .fx-pt-row, .fx-pt-head { grid-template-columns: 32px 1fr 1fr auto; padding: 0.6rem 1rem; }
+
+      /* ---- FOOTER ---- */
+      footer { font-size: 0.7rem; padding: 2rem 1rem; }
+    }
+
+    /* Extra small phones */
+    @media (max-width: 400px) {
+      .nav-links li a { padding: 0 0.35rem; font-size: 0.6rem; letter-spacing: 0.05em; }
+      .stats-strip { grid-template-columns: repeat(2, 1fr); }
+      .calc-grid { grid-template-columns: 1fr; }
+      .add-grid { grid-template-columns: 1fr; }
+      .update-grid { grid-template-columns: 1fr; }
+      .audience-grid { grid-template-columns: 1fr; }
+      .about-hero-pair { height: 160px !important; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       NAVIGATION BAR
+       showPage() switches which page is visible
+  ============================================================ -->
+  <nav>
+    <div class="nav-logo" onclick="showPage('home')">PRESSURE <span>1V1</span></div>
+    <ul class="nav-links">
+      <li><a href="#" id="nav-home"        class="active" onclick="showPage('home');return false;">Home</a></li>
+      <li><a href="#" id="nav-ranking"                    onclick="showPage('ranking');return false;">Ranking</a></li>
+      <li><a href="#" id="nav-leaderboard"               onclick="showPage('leaderboard');return false;">Leaderboard</a></li>
+      <li><a href="#" id="nav-fixtures"                   onclick="showFixtures();return false;">Fixtures</a></li>
+      <li><a href="#" id="nav-about"                      onclick="showPage('about');return false;">About</a></li>
+    </ul>
+  </nav>
+
+
+  <!-- ============================================================
+       PAGE 1: HOME
+  ============================================================ -->
+  <div class="page active" id="page-home">
+
+    <!-- HERO: background image is img_hero.webp -->
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-content">
+        <p class="eyebrow hero-eyebrow">⚽ Dubai, UAE &nbsp;·&nbsp; Phase 2 &nbsp;·&nbsp; 2026</p>
+        <h1 class="hero-title">
+          <div class="fill">PRESSURE</div>
+          <div class="outline">1V1</div>
+        </h1>
+        <p class="hero-desc">Dubai's premier competitive 1v1 football format. High-stakes tournaments. Cinematic content. Every match is a moment.</p>
+        <div class="hero-btns">
+          <button class="btn-red"   onclick="showPage('leaderboard')">VIEW RANKINGS</button>
+          <button class="btn-ghost" onclick="showPage('about')">ABOUT US</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS STRIP: 4 key numbers from Phase 1 -->
+    <div class="stats-strip">
+      <div class="stat-item"><div class="stat-num">240K+</div><div class="stat-lbl">Dashboard Views</div></div>
+      <div class="stat-item"><div class="stat-num">150K+</div><div class="stat-lbl">Instagram Views</div></div>
+      <div class="stat-item"><div class="stat-num">45</div>   <div class="stat-lbl">Elite Athletes</div></div>
+      <div class="stat-item"><div class="stat-num">100+</div> <div class="stat-lbl">Live Spectators</div></div>
+    </div>
+
+    <!-- WHO WE ARE: right image is img_action.jpg -->
+    <div class="who-section">
+      <div class="who-text">
+        <p class="eyebrow">Who We Are</p>
+        <h2 class="section-title">Dubai's Premier<br>1v1 Football<br>Organizers.</h2>
+        <p><strong>Pressure 1v1</strong> is the UAE's fastest-growing competitive football format. We host high-stakes 1v1 tournaments combining elite-level competition with cinematic content — turning every match into a moment.</p>
+        <p>Powered by N2 Academy. Based in Dubai. Building the future of grassroots football.</p>
+        <div class="tag-row">
+          <span class="tag">📍 Dubai</span>
+          <span class="tag">@pressure1v1</span>
+          <span class="tag">Phase 2 · 2026</span>
+        </div>
+      </div>
+      <!-- IMAGE: img_action.jpg — players celebrating/smiling -->
+      <div class="who-img-wrap">
+        <img src="img_action.webp" alt="Pressure 1v1 Players">
+      </div>
+    </div>
+
+    <!-- MEDIA SECTION
+         Left tall image: img_match.jpg (match action)
+         Top right:       img_crowd.jpg (crowd)
+         Bottom right:    img_run.jpg   (running legs)
+    -->
+    <section class="media-section">
+      <p class="eyebrow">Content Machine</p>
+      <h2 class="section-title">Professional Media.<br>Every Single Match.</h2>
+      <div class="media-layout">
+        <div class="media-imgs">
+          <!-- Tall left image spans both rows -->
+          <div class="media-img-box tall">
+            <img src="img_match.webp" alt="Live Match Action">
+            <div class="img-label">Live Competition</div>
+          </div>
+          <!-- Top right -->
+          <div class="media-img-box">
+            <img src="img_crowd.webp" alt="Crowd & Fans">
+            <div class="img-label">Atmosphere</div>
+          </div>
+          <!-- Bottom right -->
+          <div class="media-img-box">
+            <img src="img_run.webp" alt="Player Running">
+            <div class="img-label">Athlete Culture</div>
+          </div>
+        </div>
+        <!-- Media team role list on the right -->
+        <div class="media-info">
+          <div>
+            <h3>Pressure1v1<br>Highlights</h3>
+            <p>Think you've got what it takes? Step onto the pitch and show your worth</p>
+          </div>
+          <div class="media-roles" style="position:relative;">
+            <video id="promoVideo" autoplay muted loop playsinline style="width:100%; object-fit:cover; border-radius:8px;">
+              <source src="video.mp4" type="video/mp4">
+            </video>
+            <button id="unmuteBtn" onclick="toggleMute()" style="position:absolute; bottom:12px; right:12px; background:rgba(0,0,0,0.6); color:white; border:none; border-radius:6px; padding:6px 12px; cursor:pointer; font-size:13px;">
+              🔇 Unmute
+            </button>
+          </div>
+          </div>
+          <button class="btn-red" style="margin-top:0.5rem;" onclick="showPage('about')">LEARN MORE →</button>
+        </div>
+      </div>
+    </section>
+
+    <footer><span>PRESSURE 1V1</span> &nbsp;·&nbsp; Powered by N2 Academy &nbsp;·&nbsp; Dubai, UAE &nbsp;·&nbsp; @pressure1v1</footer>
+  </div><!-- end page-home -->
+
+
+  <!-- ============================================================
+       PAGE 2: RANKING
+       Shows all ranking rules + interactive calculator
+  ============================================================ -->
+  <div class="page" id="page-ranking">
+    <div class="page-header">
+      <p class="eyebrow">Official System</p>
+      <h2 class="section-title">Ranking Rules</h2>
+    </div>
+
+    <div class="ranking-body">
+
+      <!-- Starting rating banner -->
+      <div class="start-banner">
+        <div>
+          <div class="start-lbl">Every player starts at</div>
+          <div class="start-val">1000</div>
+        </div>
+        <div class="start-desc"><strong>Clean slate. Zero favourites.</strong> Every player enters equal. From here it's all on you — your wins, your goals, your consistency.</div>
+      </div>
+
+      <!-- Match & Tournament rules cards -->
+      <p class="eyebrow">⚔️ Match Points</p>
+      <h3 class="section-title" style="font-size:2rem;margin-bottom:1.25rem;">Win & Loss</h3>
+      <div class="cards-grid">
+        <!-- Card 1: Match result points -->
+        <div class="card">
+          <span class="card-icon">🏆</span>
+          <div class="card-title">Match Result</div>
+          <div class="card-rows">
+            <div class="card-row"><span class="cr-lbl">Win</span>            <span class="cr-val val-pos">+25</span></div>
+            <div class="card-row"><span class="cr-lbl">Loss</span>           <span class="cr-val val-neg">−15</span></div>
+            <div class="card-row"><span class="cr-lbl">Per Goal Scored</span><span class="cr-val val-pos">+2</span></div>
+          </div>
+        </div>
+        <!-- Card 2: Tournament bonuses -->
+        <div class="card">
+          <span class="card-icon">🔥</span>
+          <div class="card-title">Tournament</div>
+          <div class="card-rows">
+            <div class="card-row"><span class="cr-lbl">🥇 Winner</span>    <span class="cr-val val-gold">+40</span></div>
+            <div class="card-row"><span class="cr-lbl">🥈 Runner-Up</span> <span class="cr-val val-silver">+25</span></div>
+            <div class="card-row"><span class="cr-lbl">🥉 Semi-Final</span><span class="cr-val val-bronze">+15</span></div>
+          </div>
+        </div>
+        <!-- Card 3: Consistency / event attendance -->
+        <div class="card">
+          <span class="card-icon">👑</span>
+          <div class="card-title">Consistency</div>
+          <div class="card-rows">
+            <div class="card-row"><span class="cr-lbl">Miss 1 Event</span>  <span class="cr-val" style="color:var(--gray)">±0</span></div>
+            <div class="card-row"><span class="cr-lbl">Miss 2+ Events</span><span class="cr-val val-neg">−20 each</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upset bonus cards -->
+      <p class="eyebrow">🎯 Upset Bonus</p>
+      <h3 class="section-title" style="font-size:2rem;margin-bottom:1.25rem;">Ranking Logic</h3>
+      <div class="logic-grid">
+        <div class="logic-card up">
+          <div class="logic-icon">📈</div>
+          <div class="logic-title">+10 EXTRA</div>
+          <div class="logic-desc">Beat a higher-ranked player and earn a bonus 10 points on top of your standard win. Upsets are rewarded.</div>
+        </div>
+        <div class="logic-card down">
+          <div class="logic-icon">📉</div>
+          <div class="logic-title">−10 EXTRA</div>
+          <div class="logic-desc">Lose to a lower-ranked player and take an extra −10 penalty. Don't sleep on anyone.</div>
+        </div>
+      </div>
+
+      <!-- Rating Calculator tool -->
+      <p class="eyebrow">🧮 Tools</p>
+      <h3 class="section-title" style="font-size:2rem;margin-bottom:1.25rem;">Rating Calculator</h3>
+      <div class="calc-wrapper">
+        <div class="calc-grid">
+          <div class="calc-field"><label class="calc-label">Current Rating</label><input class="calc-input" type="number" id="curRating" placeholder="1000"></div>
+          <div class="calc-field"><label class="calc-label">Goals Scored</label>  <input class="calc-input" type="number" id="goals"     placeholder="0" min="0"></div>
+          <div class="calc-field">
+            <label class="calc-label">Match Result</label>
+            <select class="calc-select" id="result">
+              <option value="win">Win</option>
+              <option value="loss">Loss</option>
+            </select>
+          </div>
+          <div class="calc-field">
+            <label class="calc-label">Opponent Rank</label>
+            <select class="calc-select" id="opponentRank">
+              <option value="same">Similar Rank</option>
+              <option value="higher">Higher Ranked</option>
+              <option value="lower">Lower Ranked</option>
+            </select>
+          </div>
+          <div class="calc-field">
+            <label class="calc-label">Tournament Bonus</label>
+            <select class="calc-select" id="tournament">
+              <option value="0">None</option>
+              <option value="40">Winner (+40)</option>
+              <option value="25">Runner-Up (+25)</option>
+              <option value="15">Semi-Final (+15)</option>
+            </select>
+          </div>
+          <div class="calc-field"><label class="calc-label">Events Missed</label><input class="calc-input" type="number" id="missed" placeholder="0" min="0"></div>
+        </div>
+        <!-- Calls calculate() in the JS below -->
+        <button class="calc-btn" onclick="calculate()">CALCULATE RATING</button>
+        <!-- Result box — hidden until button is clicked -->
+        <div class="calc-result" id="calcResult">
+          <div class="cr-label2">New Rating</div>
+          <div class="cr-new"    id="newRating">—</div>
+          <div class="cr-change" id="ratingChange">—</div>
+          <div class="cr-breakdown" id="breakdown">—</div>
+        </div>
+      </div>
+
+    </div><!-- end ranking-body -->
+    <footer><span>PRESSURE 1V1</span> &nbsp;·&nbsp; Official Ranking System</footer>
+  </div><!-- end page-ranking -->
+
+
+  <!-- ============================================================
+       PAGE 3: LEADERBOARD
+       Top 10 live rankings + add/update/delete player tools
+  ============================================================ -->
+  <div class="page" id="page-leaderboard">
+    <div class="page-header">
+      <p class="eyebrow">Live Rankings</p>
+      <h2 class="section-title">Player Leaderboard</h2>
+    </div>
+
+    <div class="lb-body">
+
+      <!-- Pulsing live indicator -->
+      <div class="live-badge"><div class="live-dot"></div>Live Rankings — Phase 2</div>
+
+      <!-- Leaderboard table — populated by renderLB() in JS -->
+      <div class="lb-table">
+        <div class="lb-thead">
+          <span>Rank</span>
+          <span>Player</span>
+          <span style="text-align:right">Rating</span>
+          <span style="text-align:right">Trend</span>
+          <span style="text-align:right">W</span>
+        </div>
+        <div id="lbBody"></div> <!-- JS fills this with player rows -->
+      </div>
+
+      <div id="lbAdminControls" style="display:none;">
+
+        <!-- ADD PLAYER panel -->
+        <div class="add-panel">
+          <div class="panel-title">➕ Add New Player</div>
+          <div class="add-grid">
+            <div class="calc-field"><label class="calc-label">Player Name</label>   <input class="calc-input" type="text"   id="newName"        placeholder="NAME"></div>
+            <div class="calc-field"><label class="calc-label">Starting Rating</label><input class="calc-input" type="number" id="newRatingInput"  placeholder="1000"></div>
+            <div class="calc-field"><label class="calc-label">Wins</label>           <input class="calc-input" type="number" id="newWins"          placeholder="0" min="0"></div>
+            <button class="add-btn" onclick="addPlayer()">ADD PLAYER</button>
+          </div>
+        </div>
+
+        <!-- UPDATE RATING panel -->
+        <div class="update-panel">
+          <div class="panel-title">⚡ Update Player Rating</div>
+          <div class="update-grid">
+            <div class="calc-field">
+              <label class="calc-label">Select Player</label>
+              <select class="calc-select" id="updateSelect"></select>
+            </div>
+            <div class="calc-field"><label class="calc-label">New Rating</label>       <input class="calc-input" type="number" id="updateRating" placeholder="1000"></div>
+            <div class="calc-field"><label class="calc-label">Trend (+25 / -15)</label><input class="calc-input" type="text"   id="updateTrend"  placeholder="+25"></div>
+            <button class="add-btn" onclick="updatePlayer()">UPDATE</button>
+          </div>
+          <div class="danger-btns">
+            <button class="danger-btn" onclick="deleteSelected()">REMOVE SELECTED PLAYER</button>
+            <button class="muted-btn"  onclick="resetAll()">RESET TO DEFAULT</button>
+          </div>
+        </div>
+
+      </div><!-- end lbAdminControls -->
+    </div><!-- end lb-body -->
+    <footer><span>PRESSURE 1V1</span> &nbsp;·&nbsp; Live Leaderboard</footer>
+  </div><!-- end page-leaderboard -->
+
+
+  <!-- ============================================================
+       PAGE 4: ABOUT
+       Full about page with images, stats, quote, contact
+  ============================================================ -->
+  <div class="page" id="page-about">
+    <div class="page-header">
+      <p class="eyebrow">Pressure 1V1</p>
+      <h2 class="section-title">About Us</h2>
+    </div>
+
+    <div class="about-body">
+
+      <!-- Hero image at top — FILE: img_fans.jpg -->
+      <div class="about-hero-pair" style="display:flex;flex-direction:row;height:600px;">
+        <img class="about-hero-img" src="img_fans.webp" alt="Pressure 1v1 Community" style="width:50%; height:100%; object-fit:cover; object-position:center 70%; filter: brightness(1)">
+        <img class="about-hero-img" src="img_fans2.webp" alt="second image" style="width:50%; height:100%; object-fit:cover; object-position:center 70%;">
+      </div>
+
+      <!-- Who we are text block -->
+      <div class="about-text-block">
+        <h3>Dubai's Premier 1v1 Football Organizers</h3>
+        <p>Pressure 1v1 is the UAE's fastest-growing competitive football format. We host high-stakes 1v1 tournaments that combine elite-level competition with cinematic content — turning every match into a moment. Powered by N2 Academy.</p>
+      </div>
+
+      <!-- Audience breakdown cards -->
+      <p class="eyebrow">Your Audience</p>
+      <h3 class="section-title" style="font-size:2rem;margin-bottom:0.5rem;">Young. Active. Buying.</h3>
+      <div class="audience-grid">
+        <div class="audience-card"><span class="aud-icon">🎯</span><div class="aud-lbl">Core Age</div>   <div class="aud-val">16–28 years</div></div>
+        <div class="audience-card"><span class="aud-icon">📍</span><div class="aud-lbl">Location</div>   <div class="aud-val">Dubai & UAE-wide</div></div>
+        <div class="audience-card"><span class="aud-icon">⚽</span><div class="aud-lbl">Passion</div>    <div class="aud-val">Football, Sports, Streetwear</div></div>
+        <div class="audience-card"><span class="aud-icon">📱</span><div class="aud-lbl">Platform</div>   <div class="aud-val">Instagram Native</div></div>
+        <div class="audience-card"><span class="aud-icon">💪</span><div class="aud-lbl">Mindset</div>    <div class="aud-val">Competitive & Brand-Loyal</div></div>
+      </div>
+
+      <!-- Burgerman Dubai sponsor quote -->
+      <div class="quote-block" style="margin-top:3rem;">
+        <p class="q-text">Burgerman was the headline sponsor of our inaugural Pressure 1v1 event — their branding reached 100,000+ Instagram views and was front-and-center in front of 100+ live attendees. Phase 2 takes everything further.</p>
+        <p class="q-attr">— Phase 1 Sponsor: Burgerman Dubai</p>
+      </div>
+
+      <!-- Phase 1 stat cards -->
+      <p class="eyebrow" style="margin:3rem 0 0.75rem;">Phase 1 Results</p>
+      <h3 class="section-title" style="font-size:2rem;margin-bottom:1.25rem;">We Showed Up.</h3>
+      <div class="cards-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr));">
+        <div class="card" style="text-align:center;padding:1.5rem;"><div style="font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--red);line-height:1;">240K+</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;letter-spacing:0.2em;color:var(--gray);text-transform:uppercase;margin-top:0.4rem;">Dashboard Views</div></div>
+        <div class="card" style="text-align:center;padding:1.5rem;"><div style="font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--red);line-height:1;">150K+</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;letter-spacing:0.2em;color:var(--gray);text-transform:uppercase;margin-top:0.4rem;">Instagram Views</div></div>
+        <div class="card" style="text-align:center;padding:1.5rem;"><div style="font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--red);line-height:1;">45</div>    <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;letter-spacing:0.2em;color:var(--gray);text-transform:uppercase;margin-top:0.4rem;">Elite Athletes</div></div>
+        <div class="card" style="text-align:center;padding:1.5rem;"><div style="font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--red);line-height:1;">1K AED</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;letter-spacing:0.2em;color:var(--gray);text-transform:uppercase;margin-top:0.4rem;">Cash Prize</div></div>
+      </div>
+
+      <!-- Phase 2 teaser cards -->
+      <p class="eyebrow" style="margin:3rem 0 0.75rem;">Phase 2: Next Level</p>
+      <h3 class="section-title" style="font-size:2rem;margin-bottom:1.25rem;">Bigger. Louder. Better.</h3>
+      <div class="cards-grid">
+        <div class="card"><span class="card-icon">🏆</span><div class="card-title">64 Players</div>       <p style="font-size:0.88rem;color:var(--gray);line-height:1.6;">Up from 45 — elite bracket with full ELO seeding</p></div>
+        <div class="card"><span class="card-icon">👥</span><div class="card-title">200+ Spectators</div>  <p style="font-size:0.88rem;color:var(--gray);line-height:1.6;">Stadium atmosphere at Target Football Dubai</p></div>
+        <div class="card"><span class="card-icon">📡</span><div class="card-title">Live Leaderboard</div> <p style="font-size:0.88rem;color:var(--gray);line-height:1.6;">Real-time digital rankings — your brand front & center</p></div>
+      </div>
+
+      <!-- Contact section -->
+      <p class="eyebrow" style="margin:3rem 0 0.5rem;">Get In Touch</p>
+      <div class="contact-grid">
+        <div class="contact-card"><span class="c-icon">📱</span><div class="c-type">Instagram</div><div class="c-val">@pressure1v1</div></div>
+        <div class="contact-card"><span class="c-icon">📞</span><div class="c-type">Phone</div>    <div class="c-val">0564828674</div></div>
+        <div class="contact-card"><span class="c-icon">📍</span><div class="c-type">Location</div> <div class="c-val">Dubai, UAE</div></div>
+      </div>
+
+    </div><!-- end about-body -->
+    <footer><span>PRESSURE 1V1</span> &nbsp;·&nbsp; Powered by N2 Academy &nbsp;·&nbsp; Dubai, UAE</footer>
+  </div><!-- end page-about -->
+
+
+  <!-- ============================================================
+       FIXTURES ADMIN LOCK OVERLAY (shown on top of everything)
+  ============================================================ -->
+  <div id="fxLockOverlay" style="display:none;">
+    <div class="fx-lock-box">
+      <div class="fx-lock-icon">🔒</div>
+      <div class="fx-lock-title">ADMIN ACCESS</div>
+      <div class="fx-lock-sub">Enter your PIN to manage the tournament</div>
+      <input class="fx-lock-input" id="fxPinInput" type="password" maxlength="6" placeholder="••••••"
+        onkeydown="if(event.key==='Enter')fxCheckPin()">
+      <div class="fx-lock-error" id="fxPinError"></div>
+      <button class="fx-lock-btn" onclick="fxCheckPin()">UNLOCK</button>
+      <button class="fx-lock-view" onclick="fxViewOnly()">VIEW BRACKET ONLY</button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       PAGE 5: FIXTURES
+  ============================================================ -->
+  <div class="page" id="page-fixtures">
+    <div class="page-header">
+      <p class="eyebrow">⚽ Tournament Draw</p>
+      <h2 class="section-title">Fixtures</h2>
+    </div>
+
+    <div class="fixtures-body">
+
+      <!-- Admin status bar (shown when unlocked or in view mode) -->
+      <div class="fx-admin-bar" id="fxAdminBar" style="display:none;">
+        <div class="fx-admin-label">🔴 ADMIN MODE — You are managing this tournament</div>
+        <button class="fx-lock-out-btn" onclick="fxLogout()">LOCK</button>
+      </div>
+      <div class="fx-viewer-bar" id="fxViewerBar" style="display:none;">
+        <div class="fx-viewer-label">👁 VIEW ONLY — Bracket is read-only</div>
+        <button class="fx-viewer-lock-btn" onclick="fxShowLock()">ADMIN LOGIN</button>
+      </div>
+
+      <!-- Top bar: count + add button -->
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2rem;">
+        <div>
+          <div class="live-badge"><div class="live-dot"></div>PHASE 2 — 2026</div>
+          <div class="fx-player-count" style="margin-top:0.5rem;">REGISTERED: <span id="fxCount">0</span> / 64</div>
+        </div>
+        <button class="fx-btn-randomize" id="fxAddPlayerBtn" onclick="toggleAddPanel()" style="display:none;">+ ADD PLAYER</button>
+      </div>
+
+      <!-- Add player form -->
+      <div class="fx-add-panel" id="fxAddPanel" style="display:none;">
+        <div class="panel-title">Register Player</div>
+        <div class="fx-add-grid">
+          <div class="calc-field">
+            <span class="calc-label">Player Name</span>
+            <input class="calc-input" id="fx-name" placeholder="NAME">
+          </div>
+          <div class="calc-field">
+            <span class="calc-label">Instagram ID</span>
+            <input class="calc-input" id="fx-insta" placeholder="@handle" style="font-size:1.2rem;">
+          </div>
+          <div class="calc-field" style="justify-content:flex-end;">
+            <button class="add-btn" onclick="addFxPlayer()">ADD</button>
+          </div>
+          <div class="calc-field" style="justify-content:flex-end;">
+            <button class="add-btn" style="background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--gray);" onclick="toggleAddPanel()">CANCEL</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Registered players table -->
+      <div id="fxPlayerTable"></div>
+
+      <!-- Action buttons -->
+      <div class="fx-actions" id="fxActions" style="display:none;">
+        <button class="fx-btn-randomize" onclick="generateDraw()">🎲 RANDOMIZE DRAW</button>
+        <button class="fx-btn-clear" onclick="clearAllPlayers()">CLEAR ALL PLAYERS</button>
+      </div>
+
+      <!-- Start Tournament button — shown after draw, before tournament starts -->
+      <div id="fxStartSection" style="display:none;margin-bottom:2rem;">
+        <div style="background:var(--black3);border:1px solid rgba(232,0,28,0.25);border-left:4px solid var(--red);padding:1.5rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.1em;">TOURNAMENT READY</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;color:var(--gray);margin-top:0.25rem;">Click START to lock in the draw and begin picking match winners</div>
+          </div>
+          <button class="fx-btn-randomize" style="background:var(--red);font-size:1.2rem;padding:1rem 2.5rem;" onclick="startTournament()">▶ START TOURNAMENT</button>
+        </div>
+      </div>
+
+      <!-- Tournament status bar — shown during active tournament -->
+      <div id="fxTourneyStatus" style="display:none;margin-bottom:1.5rem;">
+        <div style="background:rgba(232,0,28,0.08);border:1px solid rgba(232,0,28,0.2);padding:1rem 1.5rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
+          <div class="live-badge"><div class="live-dot"></div>TOURNAMENT LIVE</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;color:var(--gray);">Click a player's name to mark them as the match winner</div>
+          <button class="fx-btn-clear" style="margin-left:auto;font-size:0.8rem;padding:0.5rem 1.2rem;" id="fxResetBtn" onclick="resetTournament()">RESET TOURNAMENT</button>
+        </div>
+      </div>
+
+      <!-- Bracket tabs + matches -->
+      <div id="fxBracketSection" style="display:none;">
+        <div class="fx-tabs" id="fxTabs"></div>
+        <div id="fxMatchList"></div>
+      </div>
+
+      <!-- Tournament Winner Celebration -->
+      <div id="fxWinnerBanner" style="display:none;margin-top:2rem;">
+        <div style="background:linear-gradient(135deg,rgba(255,215,0,0.12),rgba(232,0,28,0.12));border:2px solid var(--gold);padding:3rem 2rem;text-align:center;">
+          <div style="font-size:3rem;margin-bottom:1rem;">🏆</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:0.9rem;letter-spacing:0.4em;color:var(--gray);margin-bottom:0.5rem;">TOURNAMENT CHAMPION</div>
+          <div id="fxWinnerName" style="font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:var(--gold);line-height:1;"></div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;color:var(--gray);margin-top:1rem;">+40 rating bonus applied to leaderboard</div>
+          <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:2rem;">
+            <button class="fx-btn-randomize" onclick="showPage('leaderboard')">VIEW LEADERBOARD</button>
+            <button class="fx-btn-clear" style="font-size:1rem;padding:0.75rem 2rem;" onclick="resetTournament()">&#x1F504; RESET TOURNAMENT</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <footer><span>PRESSURE 1V1</span> &nbsp;·&nbsp; Powered by N2 Academy &nbsp;·&nbsp; Dubai, UAE</footer>
+  </div><!-- end page-fixtures -->
+
+
+  <!-- ============================================================
+       JAVASCRIPT
+       All interactivity: navigation, leaderboard, calculator
+  ============================================================ -->
+  <script>
+
+    // ---- NAVIGATION ----
+    function showPage(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      document.getElementById('page-' + page).classList.add('active');
+      document.getElementById('nav-' + page).classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    // ---- FIXTURES ADMIN LOCK ----
+    // 🔑 SET YOUR PIN HERE:
+    var FX_ADMIN_PIN = '814994';
+    var fxAdminMode = false;   // true = full admin, false = locked or view-only
+
+    function showFixtures() {
+      showPage('fixtures');
+      // If already authenticated this session, don't re-prompt
+      if (fxAdminMode) {
+        fxApplyAdminUI();
+        return;
+      }
+      // Check session flag
+      if (sessionStorage.getItem('fx_admin') === 'yes') {
+        fxAdminMode = true;
+        fxApplyAdminUI();
+        return;
+      }
+      if (sessionStorage.getItem('fx_viewonly') === 'yes') {
+        fxApplyViewerUI();
+        return;
+      }
+      fxShowLock();
+    }
+
+    function fxShowLock() {
+      document.getElementById('fxPinInput').value = '';
+      document.getElementById('fxPinError').textContent = '';
+      document.getElementById('fxLockOverlay').style.display = 'flex';
+      setTimeout(function(){ document.getElementById('fxPinInput').focus(); }, 100);
+    }
+
+    function fxCheckPin() {
+      var entered = document.getElementById('fxPinInput').value.trim();
+      if (entered === FX_ADMIN_PIN) {
+        fxAdminMode = true;
+        sessionStorage.setItem('fx_admin', 'yes');
+        sessionStorage.removeItem('fx_viewonly');
+        document.getElementById('fxLockOverlay').style.display = 'none';
+        fxApplyAdminUI();
+      } else {
+        document.getElementById('fxPinError').textContent = 'Wrong PIN. Try again.';
+        document.getElementById('fxPinInput').value = '';
+        document.getElementById('fxPinInput').focus();
+      }
+    }
+
+    function fxViewOnly() {
+      fxAdminMode = false;
+      sessionStorage.setItem('fx_viewonly', 'yes');
+      sessionStorage.removeItem('fx_admin');
+      document.getElementById('fxLockOverlay').style.display = 'none';
+      fxApplyViewerUI();
+    }
+
+    function fxLogout() {
+      fxAdminMode = false;
+      sessionStorage.removeItem('fx_admin');
+      sessionStorage.removeItem('fx_viewonly');
+      fxApplyViewerUI();
+      fxShowLock();
+    }
+
+    function fxApplyAdminUI() {
+      // Show admin bar, hide viewer bar
+      document.getElementById('fxAdminBar').style.display = 'flex';
+      document.getElementById('fxViewerBar').style.display = 'none';
+      // Show add-player button
+      document.getElementById('fxAddPlayerBtn').style.display = 'block';
+      // Show reset button
+      var rb = document.getElementById('fxResetBtn');
+      if (rb) rb.style.display = 'block';
+      // Re-render so controls show up
+      renderFxPlayers();
+    }
+
+    function fxApplyViewerUI() {
+      // Hide admin bar, show viewer bar
+      document.getElementById('fxAdminBar').style.display = 'none';
+      document.getElementById('fxViewerBar').style.display = 'flex';
+      // Hide add-player button
+      document.getElementById('fxAddPlayerBtn').style.display = 'none';
+      // Hide reset button
+      var rb = document.getElementById('fxResetBtn');
+      if (rb) rb.style.display = 'none';
+      // Re-render so controls are hidden
+      renderFxPlayers();
+    }
+
+    // ---- LEADERBOARD DATA ----
+    const DEFAULT_PLAYERS = [
+      { name: 'Armaan',  rating: 1290, wins: 6 },
+      { name: 'Fazah',  rating: 1235, wins: 5 },
+      { name: 'Muhammad Ahmad',  rating: 1200, wins: 4 },
+      { name: 'Majid Al Baloushi',  rating: 1175, wins: 3 },
+      { name: 'Ryan',  rating: 1160, wins: 3 },
+      { name: 'Fareez',  rating: 1135, wins: 2 },
+      { name: 'Ismael Cheguettine',  rating: 1135, wins: 2 },
+      { name: 'Nehan',  rating: 1135, wins: 2 },
+      { name: 'Ahmed Batu',  rating: 1135, wins: 2 },
+      { name: 'Davanshu', rating: 1135, wins: 2 },
+    ];
+
+    let players = JSON.parse(localStorage.getItem('p1v1_final') || 'null') || [...DEFAULT_PLAYERS];
+
+    function save() { localStorage.setItem('p1v1_final', JSON.stringify(players)); }
+
+    function trendColor(t) {
+      if (!t) return '#888';
+      if (t.startsWith('+')) return '#4cff91';
+      if (t.startsWith('-')) return '#e8001c';
+      return '#888';
+    }
+
+    function renderLB() {
+      const sorted = [...players].sort((a, b) => b.rating - a.rating).slice(0, 10);
+      const body = document.getElementById('lbBody');
+      body.innerHTML = sorted.map((p, i) => {
+        const medals   = ['🥇','🥈','🥉'];
+        const rankDisp = i < 3 ? medals[i] : '#' + (i + 1);
+        const rankClass = i===0 ? 'r1' : i===1 ? 'r2' : i===2 ? 'r3' : '';
+        const initials = p.name.slice(0, 2).toUpperCase();
+        const tc = trendColor(p.trend || '±0');
+        return '<div class="lb-row-item">' +
+          '<div class="lb-rank-num ' + rankClass + '">' + rankDisp + '</div>' +
+          '<div class="lb-player-cell">' +
+            '<div class="lb-avatar">' + initials + '</div>' +
+            '<div class="lb-pname">' + p.name + '</div>' +
+          '</div>' +
+          '<div class="lb-rating-val">' + p.rating + '</div>' +
+          '<div class="lb-trend-val" style="color:' + tc + '">' + (p.trend || '±0') + '</div>' +
+          '<div class="lb-wins-val">' + (p.wins || 0) + 'W</div>' +
+        '</div>';
+      }).join('');
+      const sel = document.getElementById('updateSelect');
+      sel.innerHTML = players.map((p, i) =>
+        '<option value="' + i + '">' + p.name + ' (' + p.rating + ')</option>'
+      ).join('');
+    }
+
+    function addPlayer() {
+      const name   = document.getElementById('newName').value.trim().toUpperCase();
+      const rating = parseInt(document.getElementById('newRatingInput').value) || 1000;
+      const wins   = parseInt(document.getElementById('newWins').value) || 0;
+      if (!name) return alert('Enter a player name');
+      players.push({ name, rating, trend: '±0', wins });
+      save(); renderLB();
+      document.getElementById('newName').value        = '';
+      document.getElementById('newRatingInput').value = '';
+      document.getElementById('newWins').value        = '';
+    }
+
+    function updatePlayer() {
+      const idx = parseInt(document.getElementById('updateSelect').value);
+      const nr  = document.getElementById('updateRating').value;
+      const nt  = document.getElementById('updateTrend').value.trim();
+      if (nr) players[idx].rating = parseInt(nr);
+      if (nt) players[idx].trend  = nt;
+      save(); renderLB();
+      document.getElementById('updateRating').value = '';
+      document.getElementById('updateTrend').value  = '';
+    }
+
+    function deleteSelected() {
+      const idx = parseInt(document.getElementById('updateSelect').value);
+      if (confirm('Remove ' + players[idx].name + '?')) {
+        players.splice(idx, 1);
+        save(); renderLB();
+      }
+    }
+
+    function resetAll() {
+      if (confirm('Reset all player data to defaults?')) {
+        players = [...DEFAULT_PLAYERS];
+        save(); renderLB();
+      }
+    }
+
+    renderLB();
+
+
+    // ---- RATING CALCULATOR ----
+    function calculate() {
+      const cur    = parseInt(document.getElementById('curRating').value)  || 1000;
+      const goals  = parseInt(document.getElementById('goals').value)      || 0;
+      const result = document.getElementById('result').value;
+      const opp    = document.getElementById('opponentRank').value;
+      const tourney= parseInt(document.getElementById('tournament').value)  || 0;
+      const missed = parseInt(document.getElementById('missed').value)      || 0;
+
+      let change = 0;
+      let lines  = [];
+
+      if (result === 'win') {
+        change += 25;
+        lines.push('Win: <span style="color:#4cff91">+25</span>');
+      } else {
+        change -= 15;
+        lines.push('Loss: <span style="color:#e8001c">-15</span>');
+      }
+      if (goals > 0) {
+        change += goals * 2;
+        lines.push('Goals (' + goals + 'x2): <span style="color:#4cff91">+' + (goals * 2) + '</span>');
+      }
+      if (result === 'win' && opp === 'higher') {
+        change += 10;
+        lines.push('Beat higher-ranked: <span style="color:#4cff91">+10</span>');
+      } else if (result === 'loss' && opp === 'lower') {
+        change -= 10;
+        lines.push('Lost to lower-ranked: <span style="color:#e8001c">-10</span>');
+      }
+      if (tourney > 0) {
+        change += tourney;
+        lines.push('Tournament bonus: <span style="color:#ffd700">+' + tourney + '</span>');
+      }
+      const effectiveMissed = Math.max(0, missed - 1);
+      if (effectiveMissed > 0) {
+        const penalty = effectiveMissed * 20;
+        change -= penalty;
+        lines.push('Missed events (' + effectiveMissed + 'x20): <span style="color:#e8001c">-' + penalty + '</span>');
+      }
+
+      const newR = cur + change;
+      document.getElementById('newRating').textContent    = newR;
+      document.getElementById('newRating').style.color    = change >= 0 ? '#4cff91' : '#e8001c';
+      document.getElementById('ratingChange').textContent = (change >= 0 ? '+' : '') + change + ' POINTS';
+      document.getElementById('ratingChange').style.color = change >= 0 ? '#4cff91' : '#e8001c';
+      document.getElementById('breakdown').innerHTML      = lines.join('<br>');
+      document.getElementById('calcResult').classList.add('show');
+    }
+
+
+    // ---- FIXTURES ----
+    let fxPlayers = JSON.parse(localStorage.getItem('p1v1_fx_players') || '[]');
+    let fxBracket = JSON.parse(localStorage.getItem('p1v1_fx_bracket') || 'null');
+    // fxTournament: null | { started: bool, rounds: [{name, matches}], currentRound: 0 }
+    let fxTournament = JSON.parse(localStorage.getItem('p1v1_fx_tourney') || 'null');
+
+    function saveFxPlayers()  { localStorage.setItem('p1v1_fx_players', JSON.stringify(fxPlayers)); }
+    function saveFxBracket()  { localStorage.setItem('p1v1_fx_bracket', JSON.stringify(fxBracket)); }
+    function saveFxTourney()  { localStorage.setItem('p1v1_fx_tourney', JSON.stringify(fxTournament)); }
+
+    function toggleAddPanel() {
+      var p = document.getElementById('fxAddPanel');
+      p.style.display = p.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function addFxPlayer() {
+      if (fxTournament && fxTournament.started) return alert('Cannot add players while tournament is live. Reset the tournament first.');
+      if (fxPlayers.length >= 64) return alert('Maximum 64 players reached');
+      var name  = document.getElementById('fx-name').value.trim().toUpperCase();
+      var insta = document.getElementById('fx-insta').value.trim().replace(/^@/, '');
+      if (!name) return alert('Enter a player name');
+      fxPlayers.push({ id: Date.now(), name: name, insta: insta });
+      saveFxPlayers();
+      fxBracket = null; fxTournament = null;
+      saveFxBracket(); saveFxTourney();
+      renderFxPlayers();
+      document.getElementById('fx-name').value  = '';
+      document.getElementById('fx-insta').value = '';
+    }
+
+    function removeFxPlayer(id) {
+      if (fxTournament && fxTournament.started) return alert('Cannot remove players while tournament is live.');
+      fxPlayers = fxPlayers.filter(function(p) { return p.id !== id; });
+      saveFxPlayers();
+      fxBracket = null; fxTournament = null;
+      saveFxBracket(); saveFxTourney();
+      renderFxPlayers();
+    }
+
+    function clearAllPlayers() {
+      if (!confirm('Remove all players and reset the draw?')) return;
+      fxPlayers = []; fxBracket = null; fxTournament = null;
+      saveFxPlayers(); saveFxBracket(); saveFxTourney();
+      renderFxPlayers();
+      document.getElementById('fxBracketSection').style.display = 'none';
+      document.getElementById('fxStartSection').style.display = 'none';
+      document.getElementById('fxTourneyStatus').style.display = 'none';
+      document.getElementById('fxWinnerBanner').style.display = 'none';
+    }
+
+    function shuffle(arr) {
+      var a = arr.slice();
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+      }
+      return a;
+    }
+
+    function generateDraw() {
+      if (fxPlayers.length < 2) return alert('Need at least 2 players');
+      var shuffled = shuffle(fxPlayers);
+      var n = shuffled.length;
+
+      // Find the next power of 2 >= n (the "clean" bracket size)
+      var sizes = [2,4,8,16,32,64];
+      var bracketSize = 64;
+      for (var s = 0; s < sizes.length; s++) {
+        if (sizes[s] >= n) { bracketSize = sizes[s]; break; }
+      }
+
+      // How many players need to play in round 1 to produce exactly bracketSize/2 for round 2?
+      // Extra players = n - bracketSize/2
+      // Those extras must play off in round 1: numPlayInMatches = extras, numByePlayers = bracketSize/2 - extras
+      var halfBracket   = bracketSize / 2;
+      var numPlayIn     = n - halfBracket;   // number of actual round-1 matches
+      var numByePlayers = halfBracket - numPlayIn; // players who skip straight to round 2
+
+      // Split shuffled: first numPlayIn*2 play in round 1, rest get byes
+      var playInPlayers = shuffled.slice(0, numPlayIn * 2);
+      var byePlayers    = shuffled.slice(numPlayIn * 2);
+
+      // Build round-1 matches (all are real matches — no bye matches in round 1)
+      var r1Matches = [];
+      for (var i = 0; i < playInPlayers.length; i += 2) {
+        r1Matches.push({ p1: playInPlayers[i], p2: playInPlayers[i+1], bye: false, winner: null });
+      }
+
+      // Round-1 name
+      var r1Label = numPlayIn > 0
+        ? (bracketSize > n ? 'Round 1 (' + numPlayIn + ' Match' + (numPlayIn > 1 ? 'es' : '') + ')' : 'Round of ' + bracketSize)
+        : 'Round of ' + bracketSize;
+
+      fxBracket = {
+        roundName:    r1Label,
+        bracketSize:  bracketSize,
+        matches:      r1Matches,
+        byePlayers:   byePlayers,  // these go straight to round 2
+        numPlayIn:    numPlayIn
+      };
+      fxTournament = null;
+      saveFxBracket(); saveFxTourney();
+      renderFxBracket();
+      document.getElementById('fxStartSection').style.display = 'block';
+      document.getElementById('fxTourneyStatus').style.display = 'none';
+      document.getElementById('fxWinnerBanner').style.display = 'none';
+    }
+
+    // Build all rounds for a proper single-elimination bracket.
+    // Round 1 (play-in): only players who need to play off (numPlayIn matches).
+    // Round 2: winners from round 1 + bye players = halfBracket players → halfBracket/2 matches.
+    // Subsequent rounds halve each time until the Final.
+    function buildAllRounds(fxBracketData) {
+      var rounds = [];
+      var r1Matches    = JSON.parse(JSON.stringify(fxBracketData.matches));
+      var byePlayers   = fxBracketData.byePlayers || [];
+      var bracketSize  = fxBracketData.bracketSize;
+      var numPlayIn    = fxBracketData.numPlayIn;
+      var halfBracket  = bracketSize / 2;
+
+      // ---- Round 1 (play-in) — only if there are actual matches ----
+      if (r1Matches.length > 0) {
+        rounds.push({ name: fxBracketData.roundName, matches: r1Matches });
+      }
+
+      // ---- Round 2 (first "clean" round): bye players + TBD slots for round-1 winners ----
+      // Interleave: slot a bye player, then a round-1-winner slot, alternating, so bracket stays balanced.
+      var r2Matches = [];
+      var byeQ = byePlayers.slice(); // queue of bye players
+      var playInWinnerSlots = numPlayIn; // how many TBD winner slots we need to fill
+
+      // Build halfBracket/2 matches for round 2
+      var totalR2Slots = halfBracket; // halfBracket players → halfBracket/2 matches
+      // We have byePlayers.length + numPlayIn == halfBracket players total for round 2
+      // Pair them up: pair bye players among themselves first, then pair winners among themselves,
+      // but interleave so byes don't cluster. Use a flat seat array then pair.
+      var r2Seats = [];
+      // Interleave bye players and winner-slots so they're spread across bracket
+      var bi = 0, wi = 0;
+      while (bi < byeQ.length || wi < playInWinnerSlots) {
+        if (bi < byeQ.length)       { r2Seats.push({ player: byeQ[bi++], isBye: true }); }
+        if (wi < playInWinnerSlots) { r2Seats.push({ player: null,        isBye: false, fromPlayIn: wi++ }); }
+      }
+      for (var i = 0; i < r2Seats.length; i += 2) {
+        var s1 = r2Seats[i];
+        var s2 = r2Seats[i+1] || null;
+        r2Matches.push({
+          p1: s1 ? s1.player : null,
+          p2: s2 ? s2.player : null,
+          bye: false,
+          winner: null,
+          p1FromPlayIn: s1 && !s1.isBye,
+          p2FromPlayIn: s2 && !s2.isBye
+        });
+      }
+
+      var r2Label = halfBracket === 2 ? 'Final'
+                  : halfBracket === 4 ? 'Semi-Finals'
+                  : halfBracket === 8 ? 'Quarter-Finals'
+                  : 'Round of ' + halfBracket;
+      rounds.push({ name: r2Label, matches: r2Matches });
+
+      // ---- Subsequent rounds: straightforward halving ----
+      var prevCount = r2Matches.length;
+      var size = halfBracket;
+      while (size > 2) {
+        size = size / 2;
+        var nextCount = Math.ceil(prevCount / 2);
+        var nextMatches = [];
+        for (var j = 0; j < nextCount; j++) {
+          nextMatches.push({ p1: null, p2: null, bye: false, winner: null });
+        }
+        var label = size === 2 ? 'Final'
+                  : size === 4 ? 'Semi-Finals'
+                  : size === 8 ? 'Quarter-Finals'
+                  : 'Round of ' + size;
+        rounds.push({ name: label, matches: nextMatches });
+        prevCount = nextCount;
+      }
+
+      return rounds;
+    }
+
+    // Seed a winner from (roundIdx, matchIdx) into the next round.
+    // For round 0 (play-in) → round 1 (clean round): use p1FromPlayIn/p2FromPlayIn markers.
+    function seedWinnerForward(rounds, roundIdx, matchIdx, winner) {
+      if (roundIdx >= rounds.length - 1) return;
+
+      var nextRound   = rounds[roundIdx + 1];
+      var nextMatches = nextRound.matches;
+
+      if (roundIdx === 0 && rounds.length > 1 && nextMatches[0] && ('p1FromPlayIn' in nextMatches[0] || 'p2FromPlayIn' in nextMatches[0])) {
+        // Play-in → Round 2: find the slot that was marked fromPlayIn with this matchIdx
+        for (var i = 0; i < nextMatches.length; i++) {
+          var nm = nextMatches[i];
+          if (nm.p1FromPlayIn && nm.p1 === null) {
+            nm.p1 = winner;
+            nm.p1FromPlayIn = false;
+            return;
+          }
+          if (nm.p2FromPlayIn && nm.p2 === null) {
+            nm.p2 = winner;
+            nm.p2FromPlayIn = false;
+            return;
+          }
+        }
+      } else {
+        // Standard: match i → next round match floor(i/2), p1 if even, p2 if odd
+        var nextSlot = Math.floor(matchIdx / 2);
+        if (nextSlot < nextMatches.length) {
+          if (matchIdx % 2 === 0) nextMatches[nextSlot].p1 = winner;
+          else                    nextMatches[nextSlot].p2 = winner;
+        }
+      }
+    }
+
+    function startTournament() {
+      if (!fxBracket) return;
+      var rounds = buildAllRounds(fxBracket);
+      fxTournament = { started: true, rounds: rounds, currentRound: 0 };
+      saveFxTourney();
+
+      document.getElementById('fxStartSection').style.display = 'none';
+      document.getElementById('fxTourneyStatus').style.display = 'block';
+      document.getElementById('fxActions').style.display = 'none';
+      document.getElementById('fxWinnerBanner').style.display = 'none';
+
+      renderTournament();
+    }
+
+    function undoWinnerForward(rounds, roundIdx, matchIdx, wrongWinner) {
+      // Remove wrongWinner from the next round slot it was placed in
+      if (roundIdx >= rounds.length - 1) return;
+      var nextMatches = rounds[roundIdx + 1].matches;
+
+      if (roundIdx === 0 && rounds.length > 1 && nextMatches[0] && ('p1FromPlayIn' in nextMatches[0] || 'p2FromPlayIn' in nextMatches[0])) {
+        for (var i = 0; i < nextMatches.length; i++) {
+          var nm = nextMatches[i];
+          if (nm.p1 && nm.p1.id === wrongWinner.id) {
+            nm.p1 = null; nm.p1FromPlayIn = true;
+            // if that next match also had a winner (shouldn't normally), clear it too
+            if (nm.winner && nm.winner.id === wrongWinner.id) { nm.winner = null; undoWinnerForward(rounds, roundIdx + 1, i, wrongWinner); }
+            return;
+          }
+          if (nm.p2 && nm.p2.id === wrongWinner.id) {
+            nm.p2 = null; nm.p2FromPlayIn = true;
+            if (nm.winner && nm.winner.id === wrongWinner.id) { nm.winner = null; undoWinnerForward(rounds, roundIdx + 1, i, wrongWinner); }
+            return;
+          }
+        }
+      } else {
+        var nextSlot = Math.floor(matchIdx / 2);
+        if (nextSlot < nextMatches.length) {
+          var nm2 = nextMatches[nextSlot];
+          if (nm2.p1 && nm2.p1.id === wrongWinner.id) {
+            nm2.p1 = null;
+            if (nm2.winner && nm2.winner.id === wrongWinner.id) { nm2.winner = null; undoWinnerForward(rounds, roundIdx + 1, nextSlot, wrongWinner); }
+          } else if (nm2.p2 && nm2.p2.id === wrongWinner.id) {
+            nm2.p2 = null;
+            if (nm2.winner && nm2.winner.id === wrongWinner.id) { nm2.winner = null; undoWinnerForward(rounds, roundIdx + 1, nextSlot, wrongWinner); }
+          }
+        }
+      }
+    }
+
+    function undoLeaderboardWin(playerName) {
+      var idx = players.findIndex(function(p){ return p.name.toUpperCase() === playerName.toUpperCase(); });
+      if (idx === -1) return;
+      players[idx].wins = Math.max(0, (players[idx].wins || 0) - 1);
+      players[idx].rating = (players[idx].rating || 1000) - 25;
+      players[idx].trend = '-25';
+      save(); renderLB();
+    }
+
+    function pickWinner(roundIdx, matchIdx, side) {
+      if (!fxTournament || !fxTournament.started) return;
+      var round = fxTournament.rounds[roundIdx];
+      var match = round.matches[matchIdx];
+
+      var winner = side === 'p1' ? match.p1 : match.p2;
+      var loser  = side === 'p1' ? match.p2 : match.p1;
+      if (!winner) return;
+
+      // If same player clicked again, do nothing
+      if (match.winner && match.winner.id === winner.id) return;
+
+      // Undo previous winner if changing decision
+      if (match.winner) {
+        var prevWinner = match.winner;
+        undoWinnerForward(fxTournament.rounds, roundIdx, matchIdx, prevWinner);
+        undoLeaderboardWin(prevWinner.name);
+        match.winner = null;
+      }
+
+      match.winner = winner;
+
+      // Sync win to leaderboard
+      syncWinToLeaderboard(winner.name);
+
+      // Advance winner to next round
+      var nextRoundIdx = roundIdx + 1;
+      seedWinnerForward(fxTournament.rounds, roundIdx, matchIdx, winner);
+
+      // Don't auto-switch tab — keep user on the current round so they can correct mistakes.
+      // They can manually tap the next round tab when ready.
+
+      // Final: tournament over
+      if (roundIdx === fxTournament.rounds.length - 1) {
+        syncTournamentBonus(winner.name, 'winner');
+        if (loser) syncTournamentBonus(loser.name, 'runnerup');
+        showTournamentWinner(winner.name);
+      }
+
+      // Semi-final losers get +15
+      var semiIdx = fxTournament.rounds.length - 2;
+      if (roundIdx === semiIdx) {
+        if (loser) syncTournamentBonus(loser.name, 'semi');
+      }
+
+      saveFxTourney();
+      renderTournament();
+    }
+
+    // Sync a win to the leaderboard players array
+    function syncWinToLeaderboard(playerName) {
+      var idx = players.findIndex(function(p){ return p.name.toUpperCase() === playerName.toUpperCase(); });
+      if (idx === -1) return; // not on leaderboard
+      players[idx].wins = (players[idx].wins || 0) + 1;
+      players[idx].rating = (players[idx].rating || 1000) + 25;
+      players[idx].trend = '+25';
+      save(); renderLB();
+    }
+
+    // Apply tournament placement bonus
+    function syncTournamentBonus(playerName, placement) {
+      var idx = players.findIndex(function(p){ return p.name.toUpperCase() === playerName.toUpperCase(); });
+      if (idx === -1) return;
+      var bonus = placement === 'winner' ? 40 : placement === 'runnerup' ? 25 : 15;
+      players[idx].rating = (players[idx].rating || 1000) + bonus;
+      players[idx].trend = '+' + bonus;
+      save(); renderLB();
+    }
+
+    function showTournamentWinner(name) {
+      document.getElementById('fxWinnerName').textContent = name;
+      document.getElementById('fxWinnerBanner').style.display = 'block';
+      document.getElementById('fxTourneyStatus').style.display = 'none';
+    }
+
+    function resetTournament() {
+      if (!confirm('Reset the tournament? This will keep the player list but clear all results.')) return;
+      fxTournament = null;
+      saveFxTourney();
+      document.getElementById('fxTourneyStatus').style.display = 'none';
+      document.getElementById('fxWinnerBanner').style.display = 'none';
+      document.getElementById('fxActions').style.display = fxAdminMode ? 'flex' : 'none';
+      document.getElementById('fxStartSection').style.display = (fxAdminMode && fxBracket) ? 'block' : 'none';
+      renderFxBracket();
+    }
+
+    function renderFxPlayers() {
+      var count = fxPlayers.length;
+      document.getElementById('fxCount').textContent = count;
+      var tableEl   = document.getElementById('fxPlayerTable');
+      var actionsEl = document.getElementById('fxActions');
+
+      if (count === 0) {
+        tableEl.innerHTML = fxAdminMode
+          ? '<div class="fx-empty">No players yet — add players above to build the draw</div>'
+          : '<div class="fx-empty">No players registered yet</div>';
+        actionsEl.style.display = 'none';
+        document.getElementById('fxStartSection').style.display = 'none';
+        return;
+      }
+      if (!fxTournament || !fxTournament.started) actionsEl.style.display = fxAdminMode ? 'flex' : 'none';
+
+      var html = '<div class="fx-player-table">';
+      html += '<div class="fx-pt-head"><span>#</span><span>Player</span><span>Instagram</span><span></span></div>';
+      for (var i = 0; i < fxPlayers.length; i++) {
+        var p = fxPlayers[i];
+        html += '<div class="fx-pt-row">' +
+          '<div class="fx-pt-num">' + (i+1) + '</div>' +
+          '<div class="fx-pt-name">' + p.name + '</div>' +
+          '<div class="fx-pt-insta">@' + (p.insta || '—') + '</div>' +
+          (fxAdminMode && (!fxTournament || !fxTournament.started) ? '<button class="fx-pt-del" onclick="removeFxPlayer(' + p.id + ')">✕</button>' : '<div></div>') +
+        '</div>';
+      }
+      html += '</div>';
+      tableEl.innerHTML = html;
+
+      if (fxTournament && fxTournament.started) {
+        renderTournament();
+      } else if (fxBracket) {
+        renderFxBracket();
+        // Only show START button to admin
+        if (fxAdminMode) {
+          document.getElementById('fxStartSection').style.display = 'block';
+        }
+      }
+    }
+
+    function renderFxBracket() {
+      if (!fxBracket) return;
+      document.getElementById('fxBracketSection').style.display = 'block';
+
+      document.getElementById('fxTabs').innerHTML =
+        '<button class="fx-tab active">' + fxBracket.roundName + '</button>';
+
+      var byePlayers = fxBracket.byePlayers || [];
+      var matchCount = fxBracket.matches.length;
+      var html = '';
+
+      if (matchCount > 0) {
+        html += '<div class="fx-round-label">' + fxBracket.roundName + ' — ' + matchCount + ' Match' + (matchCount > 1 ? 'es' : '') + '</div>';
+        for (var i = 0; i < fxBracket.matches.length; i++) {
+          var m = fxBracket.matches[i];
+          html += '<div class="fx-match">' +
+            '<div><div class="fx-player">' + m.p1.name + '</div><div class="fx-player-sub">@' + (m.p1.insta||'\u2014') + '</div></div>' +
+            '<div class="fx-vs">VS</div>' +
+            '<div><div class="fx-player right">' + m.p2.name + '</div><div class="fx-player-sub right">@' + (m.p2.insta||'\u2014') + '</div></div>' +
+            '<div class="fx-badge">Match ' + (i+1) + '</div>' +
+          '</div>';
+        }
+      }
+
+      if (byePlayers.length > 0) {
+        html += '<div class="fx-round-label" style="margin-top:1.5rem;">BYE \u2014 ' + byePlayers.length + ' Player' + (byePlayers.length > 1 ? 's' : '') + ' advance directly to Round 2</div>';
+        for (var j = 0; j < byePlayers.length; j++) {
+          var bp = byePlayers[j];
+          html += '<div class="fx-match bye">' +
+            '<div><div class="fx-player">' + bp.name + '</div><div class="fx-player-sub">@' + (bp.insta||'\u2014') + '</div></div>' +
+            '<div class="fx-vs">\u2014</div>' +
+            '<div><div class="fx-player right" style="color:var(--gold);">BYE</div><div class="fx-player-sub right">Free pass to Round 2</div></div>' +
+            '<div class="fx-badge bye-badge">BYE</div>' +
+          '</div>';
+        }
+      }
+
+      document.getElementById('fxMatchList').innerHTML = html;
+    }
+
+    function renderTournament() {
+      if (!fxTournament) return;
+      document.getElementById('fxBracketSection').style.display = 'block';
+
+      var rounds = fxTournament.rounds;
+      var curRound = fxTournament.currentRound;
+
+      // Build tabs for all rounds
+      var tabsHtml = '';
+      for (var r = 0; r < rounds.length; r++) {
+        tabsHtml += '<button class="fx-tab' + (r === curRound ? ' active' : '') +
+          '" onclick="switchRoundTab(' + r + ')">' + rounds[r].name + '</button>';
+      }
+      document.getElementById('fxTabs').innerHTML = tabsHtml;
+
+      renderRoundMatches(curRound);
+    }
+
+    function switchRoundTab(r) {
+      fxTournament.currentRound = r;
+      saveFxTourney();
+      renderTournament();
+    }
+
+    function renderRoundMatches(roundIdx) {
+      var round = fxTournament.rounds[roundIdx];
+      var isLastRound = roundIdx === fxTournament.rounds.length - 1;
+      var html = '<div class="fx-round-label">' + round.name + ' — ' + round.matches.filter(function(m){ return m.p1; }).length + ' Matches</div>';
+
+      for (var i = 0; i < round.matches.length; i++) {
+        var m = round.matches[i];
+        if (!m.p1 && !m.p2) continue; // empty slot, not yet populated
+
+        if (m.bye || (!m.p2 && m.p1)) {
+          html += '<div class="fx-match bye">' +
+            '<div><div class="fx-player">' + (m.p1 ? m.p1.name : '?') + '</div><div class="fx-player-sub">@' + (m.p1 ? (m.p1.insta||'—') : '—') + '</div></div>' +
+            '<div class="fx-vs">—</div>' +
+            '<div><div class="fx-player right" style="color:var(--gold);">BYE</div><div class="fx-player-sub right">Free pass</div></div>' +
+            '<div class="fx-badge bye-badge">BYE</div>' +
+          '</div>';
+          continue;
+        }
+
+        var won = !!m.winner;
+        var p1won = won && m.winner && m.p1 && m.winner.id === m.p1.id;
+        var p2won = won && m.winner && m.p2 && m.winner.id === m.p2.id;
+
+        // Allow picking winners only for admin
+        var p1Style = p1won ? 'color:var(--gold);' : (p2won ? 'opacity:0.4;' + (fxAdminMode ? 'cursor:pointer;' : '') : (fxAdminMode ? 'cursor:pointer;' : ''));
+        var p2Style = p2won ? 'color:var(--gold);' : (p1won ? 'opacity:0.4;' + (fxAdminMode ? 'cursor:pointer;' : '') : (fxAdminMode ? 'cursor:pointer;' : ''));
+        var p1Click = (fxAdminMode && m.p1 && m.p2) ? 'onclick="pickWinner(' + roundIdx + ',' + i + ',\'p1\')"' : '';
+        var p2Click = (fxAdminMode && m.p1 && m.p2) ? 'onclick="pickWinner(' + roundIdx + ',' + i + ',\'p2\')"' : '';
+
+        var matchLabel = won ? (isLastRound ? '🏆 CHAMPION' : '✓ DONE' + (fxAdminMode ? ' — tap to change' : '')) : 'Match ' + (i+1);
+        var badgeColor = won ? (isLastRound ? 'color:var(--gold);border-color:var(--gold);' : 'color:#4cff91;border-color:#4cff91;') : '';
+
+        var hintHtml = fxAdminMode
+          ? (!won ? '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.65rem;letter-spacing:0.12em;color:rgba(232,0,28,0.6);text-align:center;margin-top:0.25rem;grid-column:1/-1;">TAP PLAYER NAME TO PICK WINNER</div>' : '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.65rem;letter-spacing:0.12em;color:rgba(255,255,255,0.25);text-align:center;margin-top:0.25rem;grid-column:1/-1;">TAP OTHER PLAYER TO CORRECT</div>')
+          : '';
+
+        html += '<div class="fx-match' + (won ? '' : (fxAdminMode ? ' fx-match-live' : '')) + '" style="' + (won ? 'opacity:0.85;' : '') + '">' +
+          '<div ' + p1Click + (fxAdminMode ? ' style="cursor:pointer;"' : '') + '>' +
+            '<div class="fx-player" style="' + p1Style + (p1won ? 'text-shadow:0 0 20px rgba(255,215,0,0.5);' : '') + '">' + (m.p1 ? m.p1.name : '—') + (p1won ? ' 🏆' : '') + '</div>' +
+            '<div class="fx-player-sub">@' + (m.p1 ? (m.p1.insta||'—') : '—') + '</div>' +
+          '</div>' +
+          '<div class="fx-vs">VS</div>' +
+          '<div ' + p2Click + (fxAdminMode ? ' style="cursor:pointer;"' : '') + '>' +
+            '<div class="fx-player right" style="' + p2Style + (p2won ? 'text-shadow:0 0 20px rgba(255,215,0,0.5);' : '') + '">' + (p2won ? '🏆 ' : '') + (m.p2 ? m.p2.name : '—') + '</div>' +
+            '<div class="fx-player-sub right">@' + (m.p2 ? (m.p2.insta||'—') : '—') + '</div>' +
+          '</div>' +
+          '<div class="fx-badge" style="' + badgeColor + '">' + matchLabel + '</div>' +
+        '</div>' +
+        (hintHtml ? '<div>' + hintHtml + '</div>' : '');
+      }
+
+      document.getElementById('fxMatchList').innerHTML = html;
+    }
+
+    // Initial render — don't show bracket controls until auth is resolved
+    // (showFixtures() will call renderFxPlayers after auth)
+    if (fxTournament && fxTournament.started) {
+      document.getElementById('fxTourneyStatus').style.display = 'block';
+      document.getElementById('fxActions').style.display = 'none';
+    }
+    function toggleMute() {
+      const video = document.getElementById('promoVideo');
+      const btn = document.getElementById('unmuteBtn');
+      video.muted = !video.muted;
+      btn.textContent = video.muted ? '🔇 Unmute' : '🔊 Mute';
+    }
+
+  </script>
+</body>
+</html>
