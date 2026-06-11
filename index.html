@@ -2903,20 +2903,27 @@
     // ── 6. Animated stat counters ─────────────────────────────────
     (function(){
       function countUp(el){
+        if(el._done) return; el._done=true;
         var text=el.textContent, m=text.match(/(\d+\.?\d*)/);
         if(!m) return;
         var num=parseFloat(m[1]), pre=text.slice(0,m.index), post=text.slice(m.index+m[0].length);
-        var s=performance.now(), dur=1600;
+        var s=performance.now(), dur=1400;
         (function step(now){
           var p=Math.min((now-s)/dur,1); p=1-Math.pow(1-p,3);
           el.textContent=pre+Math.round(p*num)+post;
           if(p<1) requestAnimationFrame(step); else el.textContent=text;
         })(s);
       }
+      // low threshold so it fires in both portrait and landscape
       var io=new IntersectionObserver(function(entries){
-        entries.forEach(function(e){ if(e.isIntersecting&&!e.target._done){ e.target._done=true; countUp(e.target); } });
-      },{threshold:0.6});
-      document.querySelectorAll('.stat-num').forEach(function(el){ io.observe(el); });
+        entries.forEach(function(e){ if(e.isIntersecting) countUp(e.target); });
+      },{threshold:0.1});
+      document.querySelectorAll('.stat-num').forEach(function(el){
+        // if already visible on page load, run immediately
+        var r=el.getBoundingClientRect();
+        if(r.top < window.innerHeight && r.bottom > 0) countUp(el);
+        else io.observe(el);
+      });
     })();
 
     // ── 7. Magnetic buttons ───────────────────────────────────────
