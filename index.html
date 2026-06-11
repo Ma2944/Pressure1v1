@@ -1085,6 +1085,60 @@
       .about-hero-pair { height: 160px !important; }
     }
 
+    /* ============================================================
+       MOTION 2.0 — MOBILE OVERRIDES
+    ============================================================ */
+    @media (max-width: 768px) {
+      /* Stop heavy grain animation on mobile (saves battery/CPU) */
+      body::before { animation: none; }
+
+      /* Reduce aurora opacity on mobile */
+      #auroraCanvas { opacity: 0.35; }
+
+      /* Marquee padding tighter on mobile */
+      .marquee-item { padding: 0 1.2rem; font-size: 0.82rem; }
+
+      /* Cards should not 3D tilt on touch — keep flat hover */
+      .card:hover, .logic-card:hover, .audience-card:hover, .contact-card:hover {
+        transform: translateY(-4px);
+      }
+
+      /* Buttons don't need big glow shadow on mobile */
+      .btn-red:hover { box-shadow: none; transform: none; }
+
+      /* Page curtain faster on mobile */
+      .pcs { animation-duration: 0.25s !important; }
+
+      /* Nav overflow fix — shrink text further if needed */
+      .nav-links li a { letter-spacing: 0.06em; }
+
+      /* Reveal animations less dramatic on mobile */
+      .reveal { transform: translateY(30px); }
+    }
+
+    @media (max-width: 480px) {
+      /* Hide marquee on very small screens to save space */
+      .marquee-wrap { display: none; }
+
+      /* Hero title smaller */
+      .hero-title { font-size: clamp(3.5rem, 18vw, 6rem); }
+
+      /* Leaderboard: hide trend column too */
+      .lb-thead span:nth-child(4), .lb-row-item > *:nth-child(4) { display: none; }
+      .lb-thead, .lb-row-item { grid-template-columns: 44px 1fr 80px; }
+    }
+
+    /* Respect reduced motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .word-reveal .word { opacity: 1 !important; filter: none !important; transform: none !important; }
+      #auroraCanvas { display: none; }
+    }
+
 
     /* ============================================================
        MOTION 2.0 — CURSOR
