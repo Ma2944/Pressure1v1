@@ -2879,7 +2879,8 @@
 
     // ── 5. Scroll reveal on sections/cards ───────────────────────
     (function(){
-      var sel = '.card,.logic-card,.stat-item,.audience-card,.contact-card,.media-img-box,.about-text-block,.quote-block,.start-banner,.calc-wrapper,.who-text,.who-img-wrap,.add-panel,.update-panel,.lb-table,.fx-player-table';
+      // stat-item intentionally excluded — always visible, only red-line animates
+      var sel = '.card,.logic-card,.audience-card,.contact-card,.media-img-box,.about-text-block,.quote-block,.start-banner,.calc-wrapper,.who-text,.who-img-wrap,.add-panel,.update-panel,.lb-table,.fx-player-table';
       document.querySelectorAll(sel).forEach(function(el,i){
         el.classList.add('reveal');
         el.style.transitionDelay=((i%5)*0.08)+'s';
@@ -2889,8 +2890,14 @@
       });
       var io = new IntersectionObserver(function(entries){
         entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in-view'); } });
-      },{threshold:0.07, rootMargin:'0px 0px -30px 0px'});
-      document.querySelectorAll('.reveal,.stagger,.stat-item').forEach(function(el){ io.observe(el); });
+      },{threshold:0.05, rootMargin:'0px 0px 0px 0px'});
+      document.querySelectorAll('.reveal,.stagger').forEach(function(el){ io.observe(el); });
+
+      // stat-item red-line animation only (no hide/show)
+      var statIo = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in-view'); } });
+      },{threshold:0.1});
+      document.querySelectorAll('.stat-item').forEach(function(el){ statIo.observe(el); });
     })();
 
     // ── 6. Animated stat counters ─────────────────────────────────
