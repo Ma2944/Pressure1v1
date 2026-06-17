@@ -2091,19 +2091,11 @@
 
     let players = [...DEFAULT_PLAYERS];
 
-    function save() {
-      if (window._fbReady) {
-        window._fbSet(window._fbRef(window._fbDb, 'leaderboard'), players);
-      }
-    }
+    function save() {}
 
     function initLeaderboard() {
-      if (!window._fbReady) return;
-      window._fbOnValue(window._fbRef(window._fbDb, 'leaderboard'), function(snapshot) {
-        var data = snapshot.val();
-        if (data && Array.isArray(data)) { players = data; } else { players = [...DEFAULT_PLAYERS]; }
-        renderLB();
-      });
+      players = [...DEFAULT_PLAYERS];
+      renderLB();
     }
 
     function trendColor(t) {
