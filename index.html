@@ -1309,9 +1309,31 @@
       animation:lbRowIn 0.55s cubic-bezier(0.16,1,0.3,1) forwards;
     }
     @keyframes lbRowIn{to{opacity:1;transform:none}}
-    .lb-row-item{transition:background 0.25s,box-shadow 0.25s}
+    .lb-row-item{transition:background 0.25s,box-shadow 0.25s;position:relative}
     .lb-row-item:hover{background:rgba(232,0,28,0.07)!important;box-shadow:inset 4px 0 0 var(--red)}
     .lb-row-item:hover .lb-rating-val{color:var(--red);text-shadow:0 0 22px rgba(232,0,28,0.65);transition:color 0.25s,text-shadow 0.25s}
+
+    /* Player hover card */
+    .lb-hover-card {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 56px;
+      width: 320px;
+      z-index: 500;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(6px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      border: 1px solid rgba(232,0,28,0.3);
+      box-shadow: 0 16px 50px rgba(0,0,0,0.7), 0 0 0 1px rgba(232,0,28,0.15);
+    }
+    .lb-hover-card img {
+      width: 100%; display: block;
+    }
+    .lb-row-item:hover .lb-hover-card {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
     /* ============================================================
        MOTION 2.0 — NAV
@@ -2115,6 +2137,13 @@
         const rankClass = i===0 ? 'r1' : i===1 ? 'r2' : i===2 ? 'r3' : '';
         const initials = p.name.slice(0, 2).toUpperCase();
         const tc = trendColor(p.trend || '±0');
+        const hoverCards = {
+          'Armaan Shafeeq':  'img_armaan.webp',
+          'Muhammed Fazah':  'img_fazah.webp'
+        };
+        const cardImg = hoverCards[p.name]
+          ? '<div class="lb-hover-card"><img src="' + hoverCards[p.name] + '" alt="' + p.name + '"></div>'
+          : '';
         return '<div class="lb-row-item">' +
           '<div class="lb-rank-num ' + rankClass + '">' + rankDisp + '</div>' +
           '<div class="lb-player-cell">' +
@@ -2124,6 +2153,7 @@
           '<div class="lb-rating-val">' + p.rating + '</div>' +
           '<div class="lb-trend-val" style="color:' + tc + '">' + (p.trend || '±0') + '</div>' +
           '<div class="lb-wins-val">' + (p.wins || 0) + 'W</div>' +
+          cardImg +
         '</div>';
       }).join('');
       const sel = document.getElementById('updateSelect');
