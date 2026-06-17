@@ -1313,14 +1313,36 @@
     .lb-row-item:hover{background:rgba(232,0,28,0.07)!important;box-shadow:inset 4px 0 0 var(--red)}
     .lb-row-item:hover .lb-rating-val{color:var(--red);text-shadow:0 0 22px rgba(232,0,28,0.65);transition:color 0.25s,text-shadow 0.25s}
 
-    /* Player card — always visible under player name */
+    /* Player card */
     .lb-row-wrap { display: block; }
     .lb-hover-card {
-      border-top: 1px solid rgba(232,0,28,0.2);
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease;
+      border-top: none;
     }
     .lb-hover-card img {
       width: 100%; display: block;
-      max-height: 80px; object-fit: cover;
+    }
+
+    /* Desktop: hover to show */
+    @media (hover: hover) {
+      .lb-row-wrap:hover .lb-hover-card {
+        max-height: 300px;
+        opacity: 1;
+        border-top: 1px solid rgba(232,0,28,0.2);
+      }
+    }
+
+    /* Mobile: tap toggle via .open class */
+    @media (hover: none) {
+      .lb-row-wrap.open .lb-hover-card {
+        max-height: 300px;
+        opacity: 1;
+        border-top: 1px solid rgba(232,0,28,0.2);
+      }
+      .lb-row-item { cursor: pointer; }
     }
 
     /* ============================================================
@@ -2151,6 +2173,16 @@
         '<option value="' + i + '">' + p.name + ' (' + p.rating + ')</option>'
       ).join('');
     }
+
+    // Mobile tap-to-toggle for player cards
+    document.getElementById('lbBody').addEventListener('click', function(e) {
+      if (window.matchMedia('(hover: none)').matches) {
+        var wrap = e.target.closest('.lb-row-wrap');
+        if (wrap && wrap.querySelector('.lb-hover-card')) {
+          wrap.classList.toggle('open');
+        }
+      }
+    });
 
     function addPlayer() {
       const name   = document.getElementById('newName').value.trim().toUpperCase();
