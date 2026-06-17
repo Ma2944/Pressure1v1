@@ -1313,26 +1313,22 @@
     .lb-row-item:hover{background:rgba(232,0,28,0.07)!important;box-shadow:inset 4px 0 0 var(--red)}
     .lb-row-item:hover .lb-rating-val{color:var(--red);text-shadow:0 0 22px rgba(232,0,28,0.65);transition:color 0.25s,text-shadow 0.25s}
 
-    /* Player hover card */
+    /* Player hover card — inline, pushes rows below */
+    .lb-row-wrap { display: block; }
     .lb-hover-card {
-      position: absolute;
-      top: calc(100% + 6px);
-      left: 56px;
-      width: 320px;
-      z-index: 500;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease;
       opacity: 0;
-      pointer-events: none;
-      transform: translateY(6px);
-      transition: opacity 0.25s ease, transform 0.25s ease;
-      border: 1px solid rgba(232,0,28,0.3);
-      box-shadow: 0 16px 50px rgba(0,0,0,0.7), 0 0 0 1px rgba(232,0,28,0.15);
+      border-top: none;
     }
     .lb-hover-card img {
       width: 100%; display: block;
     }
-    .lb-row-item:hover .lb-hover-card {
+    .lb-row-wrap:hover .lb-hover-card {
+      max-height: 300px;
       opacity: 1;
-      transform: translateY(0);
+      border-top: 1px solid rgba(232,0,28,0.2);
     }
 
     /* ============================================================
@@ -2138,21 +2134,23 @@
         const initials = p.name.slice(0, 2).toUpperCase();
         const tc = trendColor(p.trend || '±0');
         const hoverCards = {
-          'Armaan Shafeeq':  'img_armaan.webp',
-          'Muhammed Fazah':  'img_fazah.webp'
+          'Armaan Shafeeq': 'img_armaan.webp',
+          'Muhammed Fazah': 'img_fazah.webp'
         };
         const cardImg = hoverCards[p.name]
           ? '<div class="lb-hover-card"><img src="' + hoverCards[p.name] + '" alt="' + p.name + '"></div>'
           : '';
-        return '<div class="lb-row-item">' +
-          '<div class="lb-rank-num ' + rankClass + '">' + rankDisp + '</div>' +
-          '<div class="lb-player-cell">' +
-            '<div class="lb-avatar">' + initials + '</div>' +
-            '<div class="lb-pname">' + p.name + '</div>' +
+        return '<div class="lb-row-wrap">' +
+          '<div class="lb-row-item">' +
+            '<div class="lb-rank-num ' + rankClass + '">' + rankDisp + '</div>' +
+            '<div class="lb-player-cell">' +
+              '<div class="lb-avatar">' + initials + '</div>' +
+              '<div class="lb-pname">' + p.name + '</div>' +
+            '</div>' +
+            '<div class="lb-rating-val">' + p.rating + '</div>' +
+            '<div class="lb-trend-val" style="color:' + tc + '">' + (p.trend || '±0') + '</div>' +
+            '<div class="lb-wins-val">' + (p.wins || 0) + 'W</div>' +
           '</div>' +
-          '<div class="lb-rating-val">' + p.rating + '</div>' +
-          '<div class="lb-trend-val" style="color:' + tc + '">' + (p.trend || '±0') + '</div>' +
-          '<div class="lb-wins-val">' + (p.wins || 0) + 'W</div>' +
           cardImg +
         '</div>';
       }).join('');
